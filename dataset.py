@@ -34,6 +34,7 @@ class SeqClsDataset(Dataset):
         # TODO: implement collate_fn
         print(len(samples))
         for data in samples:
+            print(data)
             print(self.label2idx(data["label"]))
             print(data["label"])
             data["label"] = self.label2idx(data["label"])
