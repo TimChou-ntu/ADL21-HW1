@@ -1,7 +1,7 @@
 from typing import Dict
 
 import torch
-from torch.nn import Embedding
+from torch.nn import Embedding, RNN
 
 
 class SeqClassifier(torch.nn.Module):
@@ -18,7 +18,7 @@ class SeqClassifier(torch.nn.Module):
         self.embed = Embedding.from_pretrained(embeddings, freeze=False)
         # TODO: model architecture
         print(embeddings.size())
-        self.model = nn.RNN(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
+        self.model = RNN(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
 
     @property
     def encoder_output_size(self) -> int:
