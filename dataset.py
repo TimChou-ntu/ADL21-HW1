@@ -34,6 +34,7 @@ class SeqClsDataset(Dataset):
         # TODO: implement collate_fn
         print(len(samples))
         for data in samples:
+            data["label"] = self.label2idx(data["label"])
             return data
             # return data["text"], data["intent"], data["id"]
         raise NotImplementedError
