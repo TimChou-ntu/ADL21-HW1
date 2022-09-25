@@ -32,6 +32,9 @@ class SeqClsDataset(Dataset):
 
     def collate_fn(self, samples: List[Dict]) -> Dict:
         # TODO: implement collate_fn
+        print(len(samples))
+        for data in samples:
+            return data 
         raise NotImplementedError
 
     def label2idx(self, label: str):
