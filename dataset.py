@@ -37,6 +37,7 @@ class SeqClsDataset(Dataset):
             print(data)
             print(self.label2idx(data["intent"]))
             print(data["intent"])
+            print(type(self.vocab))
             data["intent"] = self.label2idx(data["intent"])
             return data
             # return data["text"], data["intent"], data["id"]
