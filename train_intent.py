@@ -35,7 +35,7 @@ def main(args):
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # TODO: init model and move model to target device(cpu / gpu)
-    model = SeqClassifier(embeddings=embeddings,hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes())
+    model = SeqClassifier(embeddings=embeddings,hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes)
 
     # TODO: init optimizer
     optimizer = None
