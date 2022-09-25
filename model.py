@@ -17,6 +17,8 @@ class SeqClassifier(torch.nn.Module):
         super(SeqClassifier, self).__init__()
         self.embed = Embedding.from_pretrained(embeddings, freeze=False)
         # TODO: model architecture
+        print(embeddings.size())
+        self.model = nn.RNN(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
 
     @property
     def encoder_output_size(self) -> int:
@@ -25,6 +27,16 @@ class SeqClassifier(torch.nn.Module):
 
     def forward(self, batch) -> Dict[str, torch.Tensor]:
         # TODO: implement model forward
+        try:
+            print(batch.size())
+            print("tensor")
+        except:
+            print(len(batch))
+            print("list")
+
+        x = self.embed(batch)
+        y = self.model(x)
+        return y
         raise NotImplementedError
 
 

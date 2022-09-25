@@ -9,6 +9,7 @@ from tqdm import trange
 
 from dataset import SeqClsDataset
 from utils import Vocab
+from model import SeqClassifier
 
 TRAIN = "train"
 DEV = "eval"
@@ -29,10 +30,12 @@ def main(args):
         for split, split_data in data.items()
     }
     # TODO: crecate DataLoader for train / dev datasets
+    train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size, shuffle=True)
+    eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=args.batch_size)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # TODO: init model and move model to target device(cpu / gpu)
-    model = None
+    model = SeqClassifier(embeddings=embeddings)
 
     # TODO: init optimizer
     optimizer = None

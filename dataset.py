@@ -34,7 +34,8 @@ class SeqClsDataset(Dataset):
         # TODO: implement collate_fn
         print(len(samples))
         for data in samples:
-            return data 
+            return data
+            # return data["text"], data["intent"], data["id"]
         raise NotImplementedError
 
     def label2idx(self, label: str):
