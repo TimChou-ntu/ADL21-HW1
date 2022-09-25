@@ -35,9 +35,9 @@ class SeqClsDataset(Dataset):
         print(len(samples))
         for data in samples:
             print(data)
-            print(self.label2idx(data["label"]))
-            print(data["label"])
-            data["label"] = self.label2idx(data["label"])
+            print(self.label2idx(data["intent"]))
+            print(data["intent"])
+            data["intent"] = self.label2idx(data["intent"])
             return data
             # return data["text"], data["intent"], data["id"]
         raise NotImplementedError
