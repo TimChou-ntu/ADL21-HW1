@@ -19,6 +19,13 @@ class SeqClsDataset(Dataset):
         self._idx2label = {idx: intent for intent, idx in self.label_mapping.items()}
         self.max_len = max_len
 
+        ## preprocess
+        ## text
+        for d in self.data:
+            d["text"] = self.vocab.encode(d["text"])
+        ## intent
+            d["intent"] = self.label2idx(d["intent"])
+
     def __len__(self) -> int:
         return len(self.data)
 
@@ -32,14 +39,9 @@ class SeqClsDataset(Dataset):
 
     def collate_fn(self, samples: List[Dict]) -> Dict:
         # TODO: implement collate_fn
-        print(len(samples))
+        print("len is:",len(samples))
         for data in samples:
-            print(data)
-            print(self.label2idx(data["intent"]))
-            print(data["intent"])
-            print(type(self.vocab))
-            print("vocab is:",self.vocab)
-            data["intent"] = self.label2idx(data["intent"])
+
             return data
             # return data["text"], data["intent"], data["id"]
         raise NotImplementedError
