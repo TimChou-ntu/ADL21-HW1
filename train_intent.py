@@ -45,6 +45,8 @@ def main(args):
         # TODO: Training loop - iterate over train dataloader and update model weights
         for idx, batch in enumerate(train_dataloader):
             print(type(batch))
+            print(len(batch))
+            print(batch.items())
             # prediction = model()
         # TODO: Evaluation loop - calculate accuracy and save model weights
         pass
@@ -92,7 +94,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cpu"
     )
-    parser.add_argument("--num_epoch", type=int, default=100)
+    parser.add_argument("--num_epoch", type=int, default=1)
 
     args = parser.parse_args()
     return args
