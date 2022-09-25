@@ -30,6 +30,8 @@ def main(args):
         for split, split_data in data.items()
     }
     # TODO: crecate DataLoader for train / dev datasets
+    print("vocab",vocab)
+    print("intent2idx",intent2idx)
     train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size, shuffle=True)
     eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=args.batch_size)
 
