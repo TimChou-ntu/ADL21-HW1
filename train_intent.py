@@ -47,7 +47,8 @@ def main(args):
             print(type(batch))
             print(len(batch))
             print(batch.items())
-            # prediction = model()
+            prediction = model(batch["text"])
+            print(prediction)
         # TODO: Evaluation loop - calculate accuracy and save model weights
         pass
 
