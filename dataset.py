@@ -22,7 +22,7 @@ class SeqClsDataset(Dataset):
         ## preprocess
         ## text
         for d in self.data:
-            d["text"] = self.vocab.encode(d["text"])
+            d["text"] = self.vocab.encode(d["text"].split())
         ## intent
             d["intent"] = self.label2idx(d["intent"])
 
