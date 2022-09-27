@@ -49,7 +49,7 @@ def main(args):
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']])
             print(type(batch['text']))
             print(batch['text'])
-            batch['text'] = torch.Tensor(batch['text'])
+            batch['text'] = torch.Tensor(batch['text'], dtype=torch.int32)
             print(type(batch['text']))
             print(batch['text'])
             print(type(batch['text'][0]))
