@@ -46,15 +46,9 @@ def main(args):
     for epoch in epoch_pbar:
         # TODO: Training loop - iterate over train dataloader and update model weights
         for idx, batch in enumerate(train_dataloader):
-            print(type(batch))
-            print(len(batch))
-            print(type(batch['text']))
-            print(batch['text'][0])
-            print([i.split() for i in batch['text']])
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']])
-            print(batch['text'])
-            # prediction = model(batch["text"])
-            # print(prediction)
+            prediction = model(batch["text"])
+            print(prediction)
         # TODO: Evaluation loop - calculate accuracy and save model weights
         pass
 
