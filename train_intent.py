@@ -49,6 +49,7 @@ def main(args):
             print(type(batch))
             print(len(batch))
             print(batch['text'])
+            print([i.split()] for i in batch['text'])
             batch['text'] = vocab.encode_batch([i.split()] for i in batch['text'])
             print(batch['text'])
             # prediction = model(batch["text"])
