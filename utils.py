@@ -25,14 +25,17 @@ class Vocab:
         return list(self.token2idx.keys())
 
     def token_to_id(self, token: str) -> int:
+        print(type(token))
         return self.token2idx.get(token, self.unk_id)
 
     def encode(self, tokens: List[str]) -> List[int]:
+        print(type(tokens))
         return [self.token_to_id(token) for token in tokens]
 
     def encode_batch(
         self, batch_tokens: List[List[str]], to_len: int = None
     ) -> List[List[int]]:
+        print(type(batch_tokens))
         batch_ids = [self.encode(tokens) for tokens in batch_tokens]
         to_len = max(len(ids) for ids in batch_ids) if to_len is None else to_len
         padded_ids = pad_to_len(batch_ids, to_len, self.pad_id)
