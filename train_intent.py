@@ -47,6 +47,8 @@ def main(args):
         # TODO: Training loop - iterate over train dataloader and update model weights
         for idx, batch in enumerate(train_dataloader):
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']])
+            print(type(batch['text']))
+            print(type(batch['intent']))
             prediction = model(batch["text"])
             print(prediction)
         # TODO: Evaluation loop - calculate accuracy and save model weights
