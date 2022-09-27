@@ -49,7 +49,7 @@ def main(args):
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']])
             batch['text'] = torch.Tensor(batch['text']).int()
             prediction = model(batch["text"])
-            print(prediction)
+            # print(prediction)
         # TODO: Evaluation loop - calculate accuracy and save model weights
         pass
 
