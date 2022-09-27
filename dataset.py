@@ -22,7 +22,6 @@ class SeqClsDataset(Dataset):
         ## preprocess
         ## text
         for d in self.data:
-            d["text"] = self.vocab.encode(d["text"].split())
         ## intent
             d["intent"] = self.label2idx(d["intent"])
 
@@ -40,6 +39,7 @@ class SeqClsDataset(Dataset):
     def collate_fn(self, samples: List[Dict]) -> Dict:
         # TODO: implement collate_fn
         print("len is:",len(samples))
+        print(samples)
         for data in samples:
 
             return data

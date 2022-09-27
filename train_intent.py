@@ -30,8 +30,8 @@ def main(args):
         for split, split_data in data.items()
     }
     # TODO: crecate DataLoader for train / dev datasets
-    print("vocab",vocab)
-    print("intent2idx",intent2idx)
+    # print("vocab",vocab)
+    # print("intent2idx",intent2idx)
     train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size, shuffle=True, collate_fn=datasets[TRAIN].collate_fn)
     eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=args.batch_size)
 
@@ -49,8 +49,8 @@ def main(args):
             print(type(batch))
             print(len(batch))
             print(batch.items())
-            prediction = model(batch["text"])
-            print(prediction)
+            # prediction = model(batch["text"])
+            # print(prediction)
         # TODO: Evaluation loop - calculate accuracy and save model weights
         pass
 
