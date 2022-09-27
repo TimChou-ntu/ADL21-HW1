@@ -46,7 +46,7 @@ def main(args):
     for epoch in epoch_pbar:
         # TODO: Training loop - iterate over train dataloader and update model weights
         for idx, batch in enumerate(train_dataloader):
-            batch['text'] = vocab.encode_batch([i.split() for i in batch['text']])
+            batch['text'] = vocab.encode_batch([i.split() for i in batch['text']], to_len=args.max_len)
             batch['text'] = torch.Tensor(batch['text']).int()
             prediction = model(batch["text"])
             # print(prediction)
