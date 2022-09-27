@@ -48,7 +48,9 @@ def main(args):
         for idx, batch in enumerate(train_dataloader):
             print(type(batch))
             print(len(batch))
-            print(batch.items())
+            print(batch['text'])
+            batch['text'] = vocab.encode_batch([i.split()] for i in batch['text'])
+            print(batch['text'])
             # prediction = model(batch["text"])
             # print(prediction)
         # TODO: Evaluation loop - calculate accuracy and save model weights
