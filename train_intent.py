@@ -48,6 +48,9 @@ def main(args):
         for idx, batch in enumerate(train_dataloader):
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']])
             print(type(batch['text']))
+            batch['text'] = torch.Tensor(batch['text'])
+            print(type(batch['text']))
+            print(type(batch['text'][0]))
             print(type(batch['intent']))
             prediction = model(batch["text"])
             print(prediction)
