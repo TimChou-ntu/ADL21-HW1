@@ -19,7 +19,14 @@ class SeqClassifier(torch.nn.Module):
         # TODO: model architecture
         print(embeddings.size())
         self.model = RNN(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
-
+        self.classify = torch.nn.Sequential(
+            torch.nn.Linear(131072, 1024),
+            torch.nn.ReLU(inplace=True),
+            torch.nn.Linear(1024,512),
+            torch.nn.ReLU(inplace=True),
+            torch.nn.Linear(131072, 1024),
+            torch.nn.ReLU(inplace=True),
+            )
     @property
     def encoder_output_size(self) -> int:
         # TODO: calculate the output dimension of rnn

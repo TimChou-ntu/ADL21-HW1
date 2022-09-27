@@ -21,6 +21,7 @@ class SeqClsDataset(Dataset):
 
         ## preprocess
         ## text
+        print(self.label2idx)
         for d in self.data:
         ## intent
             d["intent"] = self.label2idx(d["intent"])
