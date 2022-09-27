@@ -48,7 +48,8 @@ def main(args):
         for idx, batch in enumerate(train_dataloader):
             print(type(batch))
             print(len(batch))
-            print(batch['text'])
+            print(type(batch['text']))
+            print(batch['text'][0])
             print([i.split()] for i in batch['text'])
             batch['text'] = vocab.encode_batch([i.split()] for i in batch['text'])
             print(batch['text'])
