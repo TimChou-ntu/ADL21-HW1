@@ -40,9 +40,7 @@ class SeqClsDataset(Dataset):
         # TODO: implement collate_fn
         print("len is:",len(samples))
         print(samples)
-        for data in samples:
-
-            return data
+        return samples
             # return data["text"], data["intent"], data["id"]
         raise NotImplementedError
 
