@@ -27,10 +27,12 @@ class SeqClassifier(torch.nn.Module):
 
     def forward(self, batch) -> Dict[str, torch.Tensor]:
         # TODO: implement model forward
+        print(batch.shape)
         x = self.embed(batch)
         print(x.shape)
-        y = self.model(x)
+        y, h_n = self.model(x)
         print(y.shape)
+        print(h_n.shape)
         return y
         raise NotImplementedError
 
