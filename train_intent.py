@@ -16,6 +16,14 @@ DEV = "eval"
 SPLITS = [TRAIN, DEV]
 
 
+def count_acc(prediction, label):
+    # pred = torch.argmax(prediction, dim=1)
+    pred = prediction.max(1, keepdim=True)[1]
+    # print(pred)
+    return (pred == label).type(torch.cuda.FloatTensor).mean().item()
+
+
+
 def main(args):
     with open(args.cache_dir / "vocab.pkl", "rb") as f:
         vocab: Vocab = pickle.load(f)
@@ -38,22 +46,48 @@ def main(args):
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # TODO: init model and move model to target device(cpu / gpu)
     model = SeqClassifier(embeddings=embeddings,hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes)
-
+    model.to(args.device)
+    criterion = torch.nn.CrossEntropyLoss()
     # TODO: init optimizer
-    optimizer = None
+    # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+    # lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.5)
+    optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     for epoch in epoch_pbar:
+        # lr_scheduler.step()
         # TODO: Training loop - iterate over train dataloader and update model weights
+        # TRAIN
+        model.train()
         for idx, batch in enumerate(train_dataloader):
-            batch['text'] = vocab.encode_batch([i.split() for i in batch['text']], to_len=args.max_len)
-            batch['text'] = torch.Tensor(batch['text']).int()
+            # print(batch['text'])
+            # print(batch['intent'])
+            batch['text'] = vocab.encode_batch([i.split() for i in batch['text']]) #, to_len=args.max_len)
+            batch['text'] = torch.Tensor(batch['text']).int().to(args.device)
+            batch['intent'] = batch['intent'].to(args.device)
             prediction = model(batch["text"])
+            # print(prediction)
+            # print(batch['intent'])
+            loss = criterion(prediction,batch['intent'])
+            acc = count_acc(prediction, batch['intent'])
+            print(loss,acc)
+            loss.backward()
+            optimizer.step()
+            
+            optimizer.zero_grad()
+
+            loss = None
+            prediction = None
+        # EVAL
+        model.eval()
+
+
             # print(prediction)
         # TODO: Evaluation loop - calculate accuracy and save model weights
         pass
 
     # TODO: Inference on test set
+
 
 
 def parse_args() -> Namespace:
@@ -94,9 +128,9 @@ def parse_args() -> Namespace:
 
     # training
     parser.add_argument(
-        "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cpu"
+        "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cuda"
     )
-    parser.add_argument("--num_epoch", type=int, default=1)
+    parser.add_argument("--num_epoch", type=int, default=100)
 
     args = parser.parse_args()
     return args
