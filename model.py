@@ -38,7 +38,7 @@ class SeqClassifier(torch.nn.Module):
         a, b, c = y.shape
         z = y.reshape((a,b, 2, -1))
         # print(z.shape)
-        z = torch.cat((z[:, 0, 1,:],z[:, -1, 0,:]),1)
+        z = torch.cat((z[:, 0, 0,:],z[:, -1, 1,:]),1)
         z = z.view((a,-1))
         # print(z.shape)
         # z = z[:,512:-512]
