@@ -70,7 +70,8 @@ def main(args):
             # print(batch['intent'])
             loss = criterion(prediction,batch['intent'])
             acc = count_acc(prediction, batch['intent'])
-            print(loss,acc)
+            # print(loss.item(),acc)
+            print(prediction)
             loss.backward()
             optimizer.step()
             
