@@ -21,9 +21,17 @@ class SeqClsDataset(Dataset):
 
         ## preprocess
         ## text
+        total = {}
         for d in self.data:
         ## intent
             d["intent"] = self.label2idx(d["intent"])
+
+            for i in d["intent"]:
+                try:
+                    total["i"] += 1
+                except:
+                    total["i"] = 0
+        print(total)
 
     def __len__(self) -> int:
         return len(self.data)
