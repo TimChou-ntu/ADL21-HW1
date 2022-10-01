@@ -59,7 +59,9 @@ def main(args):
         # TODO: Training loop - iterate over train dataloader and update model weights
         # TRAIN
         model.train()
+        total_loss = 0
         for idx, batch in enumerate(train_dataloader):
+            optimizer.zero_grad()
             # print(batch['text'])
             # print(batch['intent'])
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']]) #, to_len=args.max_len)
@@ -73,14 +75,16 @@ def main(args):
             # print(loss.item(),acc)
             # print(prediction)
             loss.backward()
+            total_loss += loss.item()
             optimizer.step()
             
-            optimizer.zero_grad()
+
 
             loss = None
             prediction = None
+        print(total_loss)
         # EVAL
-        model.eval()
+        # model.eval()
 
 
             # print(prediction)
