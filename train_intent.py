@@ -68,7 +68,7 @@ def main(args):
             # print(batch['text'])
             # print(batch['intent'])
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']]) #, to_len=args.max_len)
-            batch['text'] = torch.Tensor(batch['text']).int().to(args.device)
+            batch['text'] = torch.Tensor(batch['text']).float().to(args.device)
             batch['intent'] = batch['intent'].to(args.device)
             prediction = model(batch["text"])
             # print(prediction)
