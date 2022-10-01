@@ -49,9 +49,9 @@ def main(args):
     model.to(args.device)
     criterion = torch.nn.CrossEntropyLoss()
     # TODO: init optimizer
-    # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     # lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.5)
-    optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
+    # optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     for epoch in epoch_pbar:
@@ -60,6 +60,7 @@ def main(args):
         # TRAIN
         model.train()
         total_loss = 0
+        total_acc = []
         for idx, batch in enumerate(train_dataloader):
             optimizer.zero_grad()
             loss = None
@@ -73,16 +74,16 @@ def main(args):
             # print(prediction)
             # print(batch['intent'])
             loss = criterion(prediction,batch['intent'])
-            acc = count_acc(prediction, batch['intent'])
             # print(loss.item(),acc)
             # print(prediction)
             loss.backward()
             total_loss += loss.item()
             optimizer.step()
-            
+            acc = count_acc(prediction, batch['intent'])
+            total_acc.append(acc)
 
 
-        print(acc)
+        print(sum(total_acc)/len(total_acc))
         print(total_loss)
         # EVAL
         # model.eval()
