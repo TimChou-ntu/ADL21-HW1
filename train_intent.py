@@ -17,8 +17,8 @@ SPLITS = [TRAIN, DEV]
 
 
 def count_acc(prediction, label):
-    # pred = torch.argmax(prediction, dim=1)
-    pred = prediction.max(1, keepdim=True)[1]
+    pred = torch.argmax(prediction, dim=1)
+    # pred = prediction.max(1, keepdim=True)[1]
     # print(pred)
     return (pred == label).type(torch.cuda.FloatTensor).mean().item()
 
