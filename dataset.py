@@ -24,13 +24,13 @@ class SeqClsDataset(Dataset):
         total = {}
         for d in self.data:
         ## intent
+            print(d["intent"])
             d["intent"] = self.label2idx(d["intent"])
 
-            for i in d["intent"]:
-                try:
-                    total["i"] += 1
-                except:
-                    total["i"] = 0
+            try:
+                total[d["intent"]] += 1
+            except:
+                total[d["intent"]] = 0
         print(total)
 
     def __len__(self) -> int:
