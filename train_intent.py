@@ -62,6 +62,8 @@ def main(args):
         total_loss = 0
         for idx, batch in enumerate(train_dataloader):
             optimizer.zero_grad()
+            loss = None
+            prediction = None            
             # print(batch['text'])
             # print(batch['intent'])
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']]) #, to_len=args.max_len)
@@ -80,8 +82,7 @@ def main(args):
             
 
 
-            loss = None
-            prediction = None
+        print(acc)
         print(total_loss)
         # EVAL
         # model.eval()
