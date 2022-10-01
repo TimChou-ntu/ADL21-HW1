@@ -19,7 +19,7 @@ SPLITS = [TRAIN, DEV]
 def count_acc(prediction, label):
     # pred = torch.argmax(prediction, dim=1)
     pred = prediction.max(1, keepdim=True)[1]
-    # print(pred)
+    print(pred)
     return (pred == label).type(torch.cuda.FloatTensor).mean().item()
 
 
@@ -71,7 +71,7 @@ def main(args):
             loss = criterion(prediction,batch['intent'])
             acc = count_acc(prediction, batch['intent'])
             # print(loss.item(),acc)
-            print(prediction)
+            # print(prediction)
             loss.backward()
             optimizer.step()
             
