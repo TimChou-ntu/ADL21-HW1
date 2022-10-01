@@ -54,7 +54,7 @@ class SeqClassifier(torch.nn.Module):
         print(h_n.shape)
         h_n = torch.permute(h_n, (1,0,2))
         a, b, c = h_n.shape
-        h_n = h_n.view(a, -1)
+        h_n = h_n.reshape(a, -1)
         print(h_n.shape)
         prediction = self.classify(h_n)
         return prediction        
