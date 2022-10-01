@@ -52,7 +52,7 @@ class SeqClassifier(torch.nn.Module):
         x = self.embed(batch)
         y, h_n = self.model(x)
         print(h_n.shape)
-        torch.permute(h_n, (1,0,2))
+        h_n = torch.permute(h_n, (1,0,2))
         a, b, c = h_n.shape
         h_n = h_n.view(a, -1)
         print(h_n.shape)
