@@ -22,7 +22,7 @@ class SeqClassifier(torch.nn.Module):
             # torch.nn.Linear(1024,512),
             # torch.nn.ReLU(inplace=True),
             # torch.nn.Linear(1024, 256),
-            torch.nn.Linear(256,150),
+            torch.nn.Linear(1024,150),
             torch.nn.ReLU()
             )
     @property
