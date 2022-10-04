@@ -21,7 +21,7 @@ class SeqClassifier(torch.nn.Module):
         self.classify = torch.nn.Sequential(
             # torch.nn.Linear(1024,512),
             # torch.nn.ReLU(inplace=True),
-            torch.nn.Dropout(),
+            torch.nn.Dropout(0.1),
             torch.nn.Linear(1024, 256),
             torch.nn.ReLU(),
             torch.nn.Linear(256,150)
