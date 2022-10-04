@@ -78,8 +78,8 @@ def main(args):
             # print(loss.item(),acc)
             # print(prediction)
             loss.backward()
-            total_loss += loss.item()
             optimizer.step()
+            total_loss += loss.item()
             acc = count_acc(prediction, batch['intent'])
             total_acc.append(acc)
 
