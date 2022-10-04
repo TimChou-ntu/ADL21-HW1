@@ -42,7 +42,7 @@ def main(args):
     # print("vocab",vocab)
     # print("intent2idx",intent2idx)
     train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size)
-    eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=args.batch_size)
+    eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=512)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # TODO: init model and move model to target device(cpu / gpu)
@@ -55,6 +55,7 @@ def main(args):
     # optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
+    best_acc = 0
     for epoch in epoch_pbar:
         # lr_scheduler.step()
         # TODO: Training loop - iterate over train dataloader and update model weights
@@ -87,7 +88,24 @@ def main(args):
         print(sum(total_acc)/len(total_acc))
         print(total_loss)
         # EVAL
-        # model.eval()
+        with torch.no_grad():
+            model.eval()
+            total_acc = []
+            for idx, batch in enumerate(eval_dataloader):
+                prediction = None            
+                batch['text'] = vocab.encode_batch([i.split() for i in batch['text']]) #, to_len=args.max_len)
+                batch['text'] = torch.Tensor(batch['text']).int().to(args.device)
+                batch['intent'] = batch['intent'].to(args.device)
+                prediction = model(batch["text"])
+                acc = count_acc(prediction, batch['intent'])
+                total_acc.append(acc)
+            
+            acc = sum(total_acc)/len(total_acc)
+            print("evaluation acc:", acc)
+            if acc > best_acc:
+                torch.save(model.state_dict(),"./best.pt")
+                best_acc = acc
+
 
 
             # print(prediction)
