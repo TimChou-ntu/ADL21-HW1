@@ -21,7 +21,7 @@ def count_acc(prediction, label):
     # pred = prediction.max(1, keepdim=True)[1]
     # print(pred)
     # print(label)
-    return (pred == label).type(torch.cuda.FloatTensor).mean().item()
+    return 100*(pred == label).type(torch.cuda.FloatTensor).mean().item()
 
 
 
