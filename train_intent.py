@@ -41,7 +41,7 @@ def main(args):
     # TODO: crecate DataLoader for train / dev datasets
     # print("vocab",vocab)
     # print("intent2idx",intent2idx)
-    train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size, shuffle=True)
+    train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size)
     eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=args.batch_size)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
