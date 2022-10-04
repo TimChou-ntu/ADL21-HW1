@@ -21,9 +21,9 @@ class SeqClassifier(torch.nn.Module):
         self.classify = torch.nn.Sequential(
             # torch.nn.Linear(1024,512),
             # torch.nn.ReLU(inplace=True),
-            torch.nn.Linear(1024, 256),
-            torch.nn.ReLU(),
-            torch.nn.Linear(256,150)
+            # torch.nn.Linear(1024, 256),
+            torch.nn.Linear(256,150),
+            torch.nn.ReLU()
             )
     @property
     def encoder_output_size(self) -> int:
