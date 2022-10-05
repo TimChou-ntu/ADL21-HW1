@@ -12,6 +12,7 @@ class SeqClsDataset(Dataset):
         vocab: Vocab,
         label_mapping: Dict[str, int],
         max_len: int,
+        train=True
     ):
         self.data = data
         self.vocab = vocab
@@ -21,10 +22,10 @@ class SeqClsDataset(Dataset):
 
         ## preprocess
         ## text
-        total = {}
-        for d in self.data:
-        ## intent
-            d["intent"] = self.label2idx(d["intent"])
+        if train:
+            for d in self.data:
+            ## intent
+                d["intent"] = self.label2idx(d["intent"])
 
 
     def __len__(self) -> int:
