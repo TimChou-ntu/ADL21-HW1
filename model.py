@@ -23,9 +23,9 @@ class SeqClassifier(torch.nn.Module):
             # torch.nn.Linear(1024,512),
             # torch.nn.ReLU(inplace=True),
             torch.nn.Dropout(0.5),
-            torch.nn.Linear(hidden_size*2, hidden_size*2),
-            torch.nn.ReLU(),
-            # torch.nn.Dropout(0.2),
+            # torch.nn.Linear(hidden_size*2, hidden_size*2),
+            # torch.nn.ReLU(),
+            # # torch.nn.Dropout(0.2),
             torch.nn.Linear(hidden_size*2,num_class)
             )
     @property
