@@ -50,14 +50,13 @@ def main(args):
     model.to(args.device)
     criterion = torch.nn.CrossEntropyLoss()
     # TODO: init optimizer
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    # lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.5)
-    # optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+    optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
+    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[10,20,30], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_acc = 0
     for epoch in epoch_pbar:
-        # lr_scheduler.step()
         # TODO: Training loop - iterate over train dataloader and update model weights
         # TRAIN
         model.train()
@@ -83,6 +82,7 @@ def main(args):
             total_loss += loss.item()
             acc = count_acc(prediction, batch['intent'])
             total_acc.append(acc)
+        lr_scheduler.step()
 
 
         print(sum(total_acc)/len(total_acc))
