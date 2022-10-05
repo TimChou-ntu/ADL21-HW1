@@ -21,10 +21,11 @@ class SeqClassifier(torch.nn.Module):
         self.classify = torch.nn.Sequential(
             # torch.nn.Linear(1024,512),
             # torch.nn.ReLU(inplace=True),
-            torch.nn.Dropout(0.1),
-            torch.nn.Linear(512, 512),
+            torch.nn.Dropout(0.2),
+            torch.nn.Linear(hidden_size*2, hidden_size*2),
             torch.nn.ReLU(),
-            torch.nn.Linear(512,150)
+            torch.nn.Dropout(0.2),
+            torch.nn.Linear(hidden_size*2,num_class)
             )
     @property
     def encoder_output_size(self) -> int:
