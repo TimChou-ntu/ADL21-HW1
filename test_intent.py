@@ -54,7 +54,7 @@ def main(args):
 
         # TODO: write prediction to file (args.pred_file)
             for i in range(len(prediction)):
-                writer.writerow([batch['id'][i],prediction[i].item()])
+                writer.writerow([batch['id'][i],prediction[i]])
 
 def parse_args() -> Namespace:
     parser = ArgumentParser()
