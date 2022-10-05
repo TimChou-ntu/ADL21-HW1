@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Dict
 
 import torch
-
+import csv
 from dataset import SeqClsDataset
 from model import SeqClassifier
 from utils import Vocab
@@ -19,9 +19,9 @@ def main(args):
     intent2idx: Dict[str, int] = json.loads(intent_idx_path.read_text())
 
     data = json.loads(args.test_file.read_text())
-    dataset = SeqClsDataset(data, vocab, intent2idx, args.max_len)
+    dataset = SeqClsDataset(data, vocab, intent2idx, args.max_len,train=False)
     # TODO: crecate DataLoader for test dataset
-    eval_dataloader = torch.utils.data.DataLoader(dataset=dataset, batch_size=512)
+    test_dataloader = torch.utils.data.DataLoader(dataset=dataset, batch_size=512)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
 
@@ -37,11 +37,24 @@ def main(args):
 
     ckpt = torch.load(args.ckpt_path)
     # load weights into model
+    model.load_state_dict(ckpt)
+    model.to(args.device)
 
-    # TODO: predict dataset
+    with open(args.pred_file,'w',newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["id","intent"])
+        # TODO: predict dataset
+        for idx, batch in enumerate(test_dataloader):
+            batch['text'] = vocab.encode_batch([i.split() for i in batch['text']])
+            batch['text'] = torch.Tensor(batch['text']).int().to(args.device)
+            # batch['id'] = batch['id'].to(args.device)
+            prediction = model(batch['text'])
+            prediction = torch.argmax(prediction, dim=1)
+            prediction = [dataset.idx2label(i) for i in prediction.tolist()]
 
-    # TODO: write prediction to file (args.pred_file)
-
+        # TODO: write prediction to file (args.pred_file)
+            for i in range(len(prediction)):
+                writer.writerow([batch['id'][i],prediction[i].item()])
 
 def parse_args() -> Namespace:
     parser = ArgumentParser()
@@ -78,7 +91,7 @@ def parse_args() -> Namespace:
     parser.add_argument("--batch_size", type=int, default=128)
 
     parser.add_argument(
-        "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cpu"
+        "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cuda"
     )
     args = parser.parse_args()
     return args
