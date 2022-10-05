@@ -22,9 +22,9 @@ class SeqClassifier(torch.nn.Module):
             # torch.nn.Linear(1024,512),
             # torch.nn.ReLU(inplace=True),
             torch.nn.Dropout(0.1),
-            torch.nn.Linear(1024, 150),
-            # torch.nn.ReLU(),
-            # torch.nn.Linear(256,150)
+            torch.nn.Linear(512, 512),
+            torch.nn.ReLU(),
+            torch.nn.Linear(512,150)
             )
     @property
     def encoder_output_size(self) -> int:
