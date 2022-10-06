@@ -56,7 +56,7 @@ def main(args):
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_acc = 0
-    print(model)
+    # print(model)
     for epoch in epoch_pbar:
         # TODO: Training loop - iterate over train dataloader and update model weights
         # TRAIN

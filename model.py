@@ -1,6 +1,7 @@
 from typing import Dict
 
 import torch
+import torch.nn as nn
 from torch.nn import Embedding, RNN, LSTM, GRU
 
 
@@ -29,12 +30,14 @@ class SeqClassifier(torch.nn.Module):
             # # torch.nn.Dropout(0.2),
             torch.nn.Linear(hidden_size*2,num_class)
             )
-        print(num_class)
+        # print(num_class)
         self.init_weight()
-        
+
     def init_weight(self):
         for m in self.modules():
-            print(m)
+            if isinstance(m,nn.Linear):
+                nn.init.kaiming_uniform(m.weight)
+                nn.init.constant(m.bias,0)
 
     @property
     def encoder_output_size(self) -> int:
