@@ -41,7 +41,7 @@ def main(args):
     # TODO: crecate DataLoader for train / dev datasets
     # print("vocab",vocab)
     # print("intent2idx",intent2idx)
-    train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size,shuffle=True)
+    train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size) #,shuffle=True)
     eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=512)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
@@ -66,8 +66,8 @@ def main(args):
             optimizer.zero_grad()
             loss = None
             prediction = None            
-            # print(batch['text'])
-            # print(batch['intent'])
+            print(batch['text'])
+            print(batch['intent'])
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']]) #, to_len=args.max_len)
             batch['text'] = torch.Tensor(batch['text']).int().to(args.device)
             batch['intent'] = batch['intent'].to(args.device)
