@@ -31,10 +31,12 @@ class SeqClassifier(torch.nn.Module):
             )
         print(num_class)
         self.init_weight()
-    @property
+        
     def init_weight(self):
         for m in self.modules():
             print(m)
+
+    @property
     def encoder_output_size(self) -> int:
         # TODO: calculate the output dimension of rnn
         raise NotImplementedError
