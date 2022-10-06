@@ -36,8 +36,8 @@ class SeqClassifier(torch.nn.Module):
     def init_weight(self):
         for m in self.modules():
             if isinstance(m,nn.Linear):
-                nn.init.kaiming_uniform(m.weight)
-                nn.init.constant(m.bias,0)
+                nn.init.kaiming_uniform_(m.weight)
+                nn.init.constant_(m.bias,0)
 
     @property
     def encoder_output_size(self) -> int:
