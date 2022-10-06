@@ -17,9 +17,9 @@ class SeqClassifier(torch.nn.Module):
         super(SeqClassifier, self).__init__()
         self.embed = Embedding.from_pretrained(embeddings, freeze=False)
         # TODO: model architecture
-        # self.model = RNN(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
-        # self.model = LSTM(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
-        self.model = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
+        self.rnn = RNN(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
+        # self.rnn = LSTM(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
+        # self.rnn = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
         self.classify = torch.nn.Sequential(
             # torch.nn.Linear(1024,512),
             # torch.nn.ReLU(inplace=True),
@@ -30,7 +30,11 @@ class SeqClassifier(torch.nn.Module):
             torch.nn.Linear(hidden_size*2,num_class)
             )
         print(num_class)
+        self.init_weight()
     @property
+    def init_weight(self):
+        for m in self.modules:
+            print(m)
     def encoder_output_size(self) -> int:
         # TODO: calculate the output dimension of rnn
         raise NotImplementedError
@@ -38,7 +42,7 @@ class SeqClassifier(torch.nn.Module):
     def forward(self, batch) -> Dict[str, torch.Tensor]:
         # TODO: implement model forward
         x = self.embed(batch)
-        y, h_n = self.model(x)
+        y, h_n = self.rnn(x)
         a, b, c = y.shape
         z = y.reshape((a,b, 2, -1))
         # print(z.shape)
