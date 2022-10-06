@@ -11,7 +11,7 @@ from dataset import SeqClsDataset
 from utils import Vocab
 from model import SeqClassifier
 
-TRAIN = "try"
+TRAIN = "train"
 DEV = "eval"
 SPLITS = [TRAIN, DEV]
 
@@ -41,7 +41,7 @@ def main(args):
     # TODO: crecate DataLoader for train / dev datasets
     # print("vocab",vocab)
     # print("intent2idx",intent2idx)
-    train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size) #,shuffle=True)
+    train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size,shuffle=True)
     eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=512)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
@@ -52,7 +52,7 @@ def main(args):
     # TODO: init optimizer
     # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
-    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[25,50,75], gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[25,50,100], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_acc = 0
@@ -66,8 +66,8 @@ def main(args):
             optimizer.zero_grad()
             loss = None
             prediction = None            
-            print(batch['text'])
-            print(batch['intent'])
+            # print(batch['text'])
+            # print(batch['intent'])
             batch['text'] = vocab.encode_batch([i.split() for i in batch['text']]) #, to_len=args.max_len)
             batch['text'] = torch.Tensor(batch['text']).int().to(args.device)
             batch['intent'] = batch['intent'].to(args.device)
