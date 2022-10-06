@@ -33,7 +33,7 @@ class SeqClassifier(torch.nn.Module):
         self.init_weight()
     @property
     def init_weight(self):
-        for m in self.modules:
+        for m in self.modules():
             print(m)
     def encoder_output_size(self) -> int:
         # TODO: calculate the output dimension of rnn
