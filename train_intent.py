@@ -50,8 +50,8 @@ def main(args):
     model.to(args.device)
     criterion = torch.nn.CrossEntropyLoss()
     # TODO: init optimizer
-    # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+    # optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
     lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[25,50,100], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
