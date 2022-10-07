@@ -1,1 +1,1 @@
-print("Hello")
+print("Hello%10.3f"%100.34567)

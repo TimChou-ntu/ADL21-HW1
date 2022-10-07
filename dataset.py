@@ -1,6 +1,7 @@
 from typing import List, Dict
 
 from torch.utils.data import Dataset
+import torch
 
 from utils import Vocab
 
@@ -19,12 +20,12 @@ class SeqClsDataset(Dataset):
         self.label_mapping = label_mapping
         self._idx2label = {idx: intent for intent, idx in self.label_mapping.items()}
         self.max_len = max_len
+        self.train = train
 
         ## preprocess
-        ## text
-        if train:
-            for d in self.data:
             ## intent
+        if self.train:
+            for d in self.data:
                 d["intent"] = self.label2idx(d["intent"])
 
 
@@ -41,9 +42,14 @@ class SeqClsDataset(Dataset):
 
     def collate_fn(self, samples: List[Dict]) -> Dict:
         # TODO: implement collate_fn
-        return samples
-            # return data["text"], data["intent"], data["id"]
-        raise NotImplementedError
+        text = [i['text'].split() for i in samples]
+        text = self.vocab.encode_batch(text)
+        id = [i['id'] for i in samples]
+        if self.train:
+            intent = [i['intent'] for i in samples]
+            return {"text":torch.Tensor(text),"id":id,"intent":torch.Tensor(intent)}
+        else:
+            return {"text":torch.Tensor(text),"id":id}
 
     def label2idx(self, label: str):
         return self.label_mapping[label]

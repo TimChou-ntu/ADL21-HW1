@@ -18,10 +18,7 @@ SPLITS = [TRAIN, DEV]
 
 def count_acc(prediction, label):
     pred = torch.argmax(prediction, dim=1)
-    # pred = prediction.max(1, keepdim=True)[1]
-    # print(pred)
-    # print(label)
-    return 100*(pred == label).type(torch.cuda.FloatTensor).mean().item()
+    return 100*((pred == label).type(torch.cuda.FloatTensor).mean().item())
 
 
 
@@ -39,9 +36,7 @@ def main(args):
         for split, split_data in data.items()
     }
     # TODO: crecate DataLoader for train / dev datasets
-    # print("vocab",vocab)
-    # print("intent2idx",intent2idx)
-    train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size,shuffle=True)
+    train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size,shuffle=True,collate_fn=datasets[TRAIN].collate_fn)
     eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=512)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
@@ -52,11 +47,10 @@ def main(args):
     # TODO: init optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     # optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
-    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[25,50,100], gamma=0.1)
+    # lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[25,50,100], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_acc = 0
-    # print(model)
     for epoch in epoch_pbar:
         # TODO: Training loop - iterate over train dataloader and update model weights
         # TRAIN
@@ -67,50 +61,48 @@ def main(args):
             optimizer.zero_grad()
             loss = None
             prediction = None            
-            # print(batch['text'])
-            # print(batch['intent'])
-            batch['text'] = vocab.encode_batch([i.split() for i in batch['text']]) #, to_len=args.max_len)
-            batch['text'] = torch.Tensor(batch['text']).int().to(args.device)
+
+            batch['text'] = batch['text'].int().to(args.device)
             batch['intent'] = batch['intent'].to(args.device)
             prediction = model(batch["text"])
-            # print(prediction)
-            # print(batch['intent'])
+
             loss = criterion(prediction,batch['intent'])
-            # print(loss.item(),acc)
-            # print(prediction)
             loss.backward()
             optimizer.step()
+
             total_loss += loss.item()
             acc = count_acc(prediction, batch['intent'])
             total_acc.append(acc)
-        lr_scheduler.step()
+        # lr_scheduler.step()
 
 
-        print(sum(total_acc)/len(total_acc))
-        print(total_loss)
+        print("Training acc: %2.3f" %(sum(total_acc)/len(total_acc)))
+        print("Training Loss: %1.3f"%(total_loss))
         # EVAL
+        # TODO: Evaluation loop - calculate accuracy and save model weights
         with torch.no_grad():
             model.eval()
             total_acc = []
+            total_loss = 0
             for idx, batch in enumerate(eval_dataloader):
                 prediction = None            
-                batch['text'] = vocab.encode_batch([i.split() for i in batch['text']]) #, to_len=args.max_len)
-                batch['text'] = torch.Tensor(batch['text']).int().to(args.device)
+                batch['text'] = batch['text'].to(args.device)
                 batch['intent'] = batch['intent'].to(args.device)
                 prediction = model(batch["text"])
+
+                total_loss += criterion(prediction, batch["intent"]).item()
                 acc = count_acc(prediction, batch['intent'])
                 total_acc.append(acc)
             
             acc = sum(total_acc)/len(total_acc)
-            print("evaluation acc:", acc)
+            print("evaluation acc:%1.3f" %acc)
+            print("evaluation Loss:%2.3f"%(total_loss))
             if acc > best_acc:
                 torch.save(model.state_dict(),"./best.pt")
                 best_acc = acc
 
 
 
-            # print(prediction)
-        # TODO: Evaluation loop - calculate accuracy and save model weights
         pass
 
     # TODO: Inference on test set
