@@ -21,12 +21,12 @@ class SeqClassifier(torch.nn.Module):
         self.rnn = RNN(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
         # self.rnn = LSTM(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
         # self.rnn = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional)
-        self.classify = torch.nn.Sequential(
-            torch.nn.Linear(hidden_size*2,hidden_size*2),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(0.1),
-            torch.nn.Linear(hidden_size*2,num_class)
-            )
+        # self.classify = torch.nn.Sequential(
+        #     torch.nn.Linear(hidden_size*2,hidden_size*2),
+        #     torch.nn.ReLU(),
+        #     torch.nn.Dropout(0.1),
+        #     torch.nn.Linear(hidden_size*2,num_class)
+        #     )
         self.init_weight()
 
     def init_weight(self):
@@ -44,11 +44,12 @@ class SeqClassifier(torch.nn.Module):
         # TODO: implement model forward
         x = self.embed(batch)
         y, h_n = self.rnn(x)
-        a, b, c = y.shape
-        z = y.reshape((a,b, 2, -1))
-        z = torch.cat((z[:, 0, 1,:],z[:, -1, 0,:]),1)
-        prediction = self.classify(z)
-        return prediction
+        return y
+        # a, b, c = y.shape
+        # z = y.reshape((a,b, 2, -1))
+        # z = torch.cat((z[:, 0, 1,:],z[:, -1, 0,:]),1)
+        # prediction = self.classify(z)
+        # return prediction
         raise NotImplementedError
 
 

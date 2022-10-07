@@ -1,132 +1,57 @@
 [
-  {
-    "text": "i need you to book me a flight from ft lauderdale to houston on southwest",
-    "intent": "book_flight",
-    "id": "train-0"
-  },
-  {
-    "text": "my check engine light is on and i need to take a look at it",
-    "intent": "schedule_maintenance",
-    "id": "train-1"
-  },
-  {
-    "text": "is the company party on my list of reminders",
-    "intent": "reminder",
-    "id": "train-2"
-  },
-  {
-    "text": "are you a human",
-    "intent": "are_you_a_bot",
-    "id": "train-3"
-  },
-  {
-    "text": "i need to do cleaning so add it to my to do list",
-    "intent": "todo_list_update",
-    "id": "train-4"
-  },
-  {
-    "text": "how do i change my oil and what kind do i need",
-    "intent": "oil_change_how",
-    "id": "train-5"
-  },
-  {
-    "text": "how healthy are french fries",
-    "intent": "nutrition_info",
-    "id": "train-6"
-  },
-  {
-    "text": "i'd like to have everything on my shopping list",
-    "intent": "order",
-    "id": "train-7"
-  },
-  {
-    "text": "what type of plugs are used in cambodia",
-    "intent": "plug_type",
-    "id": "train-8"
-  },
-  {
-    "text": "say trivia about lebron james",
-    "intent": "fun_fact",
-    "id": "train-9"
-  },
-  {
-    "text": "speak in a woman's voice",
-    "intent": "change_accent",
-    "id": "train-10"
-  },
-  {
-    "text": "can you please start my car",
-    "intent": "smart_home",
-    "id": "train-11"
-  },
-  {
-    "text": "please set an alarm for mid day",
-    "intent": "alarm",
-    "id": "train-12"
-  },
-  {
-    "text": "i need someone to look at my car and tell me why the light is on",
-    "intent": "schedule_maintenance",
-    "id": "train-13"
-  },
-  {
-    "text": "share my location with ben and jerry",
-    "intent": "share_location",
-    "id": "train-14"
-  },
-  {
-    "text": "tell lydia and laura where i am located",
-    "intent": "share_location",
-    "id": "train-15"
-  },
-  {
-    "text": "what is latin for i love you",
-    "intent": "translate",
-    "id": "train-16"
-  },
-  {
-    "text": "what is the name of the insurance plan that i'm enrolled in",
-    "intent": "insurance",
-    "id": "train-17"
-  },
-  {
-    "text": "whereabouts are you from",
-    "intent": "where_are_you_from",
-    "id": "train-18"
-  },
-  {
-    "text": "what's the deal with my health care",
-    "intent": "insurance",
-    "id": "train-19"
-  },
-  {
-    "text": "what is the tax amount",
-    "intent": "taxes",
-    "id": "train-20"
-  },
-  {
-    "text": "do i need to get vaccinated to go to thailand",
-    "intent": "vaccines",
-    "id": "train-21"
-  },
-  {
-    "text": "how much time have i taken off this year",
-    "intent": "pto_used",
-    "id": "train-22"
-  },
-  {
-    "text": "what is that tax form that shows my wages and where do i get it",
-    "intent": "w2",
-    "id": "train-23"
-  },
-  {
-    "text": "i have to send a text",
-    "intent": "text",
-    "id": "train-24"
-  },
-  {
-    "text": "what is the average wait time at the cheese cake factory",
-    "intent": "how_busy",
-    "id": "train-25"
-  }
-]
+    {
+      "text": "i need you to book me a flight from ft lauderdale to houston on southwest",
+      "intent": "book_flight",
+      "id": "train-0"
+    },
+    {
+      "text": "my check engine light is on and i need to take a look at it",
+      "intent": "schedule_maintenance",
+      "id": "train-1"
+    },
+    {
+      "text": "is the company party on my list of reminders",
+      "intent": "reminder",
+      "id": "train-2"
+    },
+    {
+      "text": "are you a human",
+      "intent": "are_you_a_bot",
+      "id": "train-3"
+    },
+    {
+      "text": "i need to do cleaning so add it to my to do list",
+      "intent": "todo_list_update",
+      "id": "train-4"
+    },
+    {
+      "text": "how do i change my oil and what kind do i need",
+      "intent": "oil_change_how",
+      "id": "train-5"
+    },
+    {
+      "text": "how healthy are french fries",
+      "intent": "nutrition_info",
+      "id": "train-6"
+    },
+    {
+      "text": "i'd like to have everything on my shopping list",
+      "intent": "order",
+      "id": "train-7"
+    },
+    {
+      "text": "what type of plugs are used in cambodia",
+      "intent": "plug_type",
+      "id": "train-8"
+    },
+    {
+      "text": "say trivia about lebron james",
+      "intent": "fun_fact",
+      "id": "train-9"
+    },
+    {
+      "text": "speak in a woman's voice",
+      "intent": "change_accent",
+      "id": "train-10"
+    }
+]  
