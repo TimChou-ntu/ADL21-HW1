@@ -47,7 +47,7 @@ class SeqClsDataset(Dataset):
         id = [i['id'] for i in samples]
         if self.train:
             intent = [i['intent'] for i in samples]
-            return {"text":torch.Tensor(text),"id":id,"intent":torch.Tensor(intent).int()}
+            return {"text":torch.Tensor(text),"id":id,"intent":torch.Tensor(intent).long()}
         else:
             return {"text":torch.Tensor(text),"id":id}
 
