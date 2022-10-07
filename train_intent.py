@@ -37,7 +37,7 @@ def main(args):
     }
     # TODO: crecate DataLoader for train / dev datasets
     train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size,shuffle=True,collate_fn=datasets[TRAIN].collate_fn)
-    eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=512)
+    eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=512,collate_fn=datasets[DEV].collate_fn)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # TODO: init model and move model to target device(cpu / gpu)
