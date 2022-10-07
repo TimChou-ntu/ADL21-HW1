@@ -11,7 +11,7 @@ from dataset import SeqClsDataset
 from utils import Vocab
 from model import SeqClassifier
 
-TRAIN = "try"
+TRAIN = "train"
 DEV = "eval"
 SPLITS = [TRAIN, DEV]
 
