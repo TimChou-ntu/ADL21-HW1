@@ -45,9 +45,7 @@ def main(args):
         writer.writerow(["id","intent"])
         # TODO: predict dataset
         for idx, batch in enumerate(test_dataloader):
-            batch['text'] = vocab.encode_batch([i.split() for i in batch['text']])
-            batch['text'] = torch.Tensor(batch['text']).int().to(args.device)
-            # batch['id'] = batch['id'].to(args.device)
+            batch['text'] = batch['text'].to(args.device)
             prediction = model(batch['text'])
             prediction = torch.argmax(prediction, dim=1)
             prediction = [dataset.idx2label(i) for i in prediction.tolist()]
@@ -82,7 +80,7 @@ def parse_args() -> Namespace:
     parser.add_argument("--max_len", type=int, default=128)
 
     # model
-    parser.add_argument("--hidden_size", type=int, default=256)
+    parser.add_argument("--hidden_size", type=int, default=512)
     parser.add_argument("--num_layers", type=int, default=2)
     parser.add_argument("--dropout", type=float, default=0.1)
     parser.add_argument("--bidirectional", type=bool, default=True)
