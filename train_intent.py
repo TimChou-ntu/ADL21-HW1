@@ -76,8 +76,7 @@ def main(args):
         # lr_scheduler.step()
 
 
-        print("Training acc: %2.3f" %(sum(total_acc)/len(total_acc)))
-        print("Training Loss: %1.3f"%(total_loss))
+        print("Training acc: %2.3f" %(sum(total_acc)/len(total_acc)), "Training Loss: %1.3f"%(total_loss))
         # EVAL
         # TODO: Evaluation loop - calculate accuracy and save model weights
         with torch.no_grad():
@@ -95,8 +94,7 @@ def main(args):
                 total_acc.append(acc)
             
             acc = sum(total_acc)/len(total_acc)
-            print("evaluation acc:%1.3f" %acc)
-            print("evaluation Loss:%2.3f"%(total_loss))
+            print("Evaluation acc:%1.3f" %acc, "Evaluation Loss:%2.3f"%(total_loss))
             if acc > best_acc:
                 torch.save(model.state_dict(),"./best.pt")
                 best_acc = acc
