@@ -47,9 +47,9 @@ class SeqClsDataset(Dataset):
         id = [i['id'] for i in samples]
         if self.train:
             intent = [i['intent'] for i in samples]
-            return {"text":torch.Tensor(text),"id":id,"intent":torch.Tensor(intent).long()}
+            return {"text":torch.Tensor(text).long(),"id":id,"intent":torch.Tensor(intent).long()}
         else:
-            return {"text":torch.Tensor(text),"id":id}
+            return {"text":torch.Tensor(text).long(),"id":id}
 
     def label2idx(self, label: str):
         return self.label_mapping[label]
