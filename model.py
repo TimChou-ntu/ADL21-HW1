@@ -44,10 +44,11 @@ class SeqClassifier(torch.nn.Module):
         # TODO: implement model forward
         x = self.embed(batch)
         y, h_n = self.rnn(x)
-        return y
-        # a, b, c = y.shape
-        # z = y.reshape((a,b, 2, -1))
-        # z = torch.cat((z[:, 0, 1,:],z[:, -1, 0,:]),1)
+
+        a, b, c = y.shape
+        z = y.reshape((a,b, 2, -1))
+        z = torch.cat((z[:, 0, 1,:],z[:, -1, 0,:]),1)
+        return z
         # prediction = self.classify(z)
         # return prediction
         raise NotImplementedError
