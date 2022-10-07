@@ -16,7 +16,8 @@ pip install -r requirements.in
 bash preprocess.sh
 ```
 
-## Intent detection
+## Intent classification
 ```shell
 python train_intent.py
+python test_intent.py --test_file=./data/intent/test.json --ckpt_path=./best.pt
 ```
