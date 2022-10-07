@@ -45,8 +45,8 @@ def main(args):
     model.to(args.device)
     criterion = torch.nn.CrossEntropyLoss()
     # TODO: init optimizer
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    # optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+    optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
     # lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[25,50,100], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
@@ -76,7 +76,7 @@ def main(args):
         # lr_scheduler.step()
 
 
-        print("Training acc: %2.3f" %(sum(total_acc)/len(total_acc)), "Training Loss: %1.3f"%(total_loss))
+        print("Training acc: %2.3f" %(sum(total_acc)/len(total_acc)), "Training Loss: %1.3f"%(total_loss/len(datasets[TRAIN])))
         # EVAL
         # TODO: Evaluation loop - calculate accuracy and save model weights
         with torch.no_grad():
@@ -94,7 +94,7 @@ def main(args):
                 total_acc.append(acc)
             
             acc = sum(total_acc)/len(total_acc)
-            print("Evaluation acc:%1.3f" %acc, "Evaluation Loss:%2.3f"%(total_loss))
+            print("Evaluation acc:%1.3f" %acc, "Evaluation Loss:%2.3f"%(total_loss/len(datasets[DEV])))
             if acc > best_acc:
                 torch.save(model.state_dict(),"./best.pt")
                 best_acc = acc
