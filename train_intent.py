@@ -11,7 +11,7 @@ from dataset import SeqClsDataset
 from utils import Vocab
 from model import SeqClassifier
 
-TRAIN = "try"
+TRAIN = "train"
 DEV = "eval"
 SPLITS = [TRAIN, DEV]
 
@@ -47,7 +47,7 @@ def main(args):
     # TODO: init optimizer
     # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
-    # lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[25,50,100], gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[100,200,300], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_acc = 0
