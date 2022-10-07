@@ -24,13 +24,13 @@ class SeqClassifier(torch.nn.Module):
         self.classify = torch.nn.Sequential(
             torch.nn.Linear(hidden_size*2,hidden_size*2),
             torch.nn.ReLU(),
-            torch.nn.Dropout(0.3),
+            torch.nn.Dropout(0.5),
             torch.nn.Linear(hidden_size*2,hidden_size),
             torch.nn.ReLU(),
-            torch.nn.Dropout(0.3),
+            torch.nn.Dropout(0.5),
             torch.nn.Linear(hidden_size,hidden_size),
             torch.nn.ReLU(),
-            torch.nn.Dropout(0.3),
+            torch.nn.Dropout(0.5),
             torch.nn.Linear(hidden_size,num_class)
             )
         self.init_weight()
