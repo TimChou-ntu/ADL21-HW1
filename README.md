@@ -19,5 +19,5 @@ bash preprocess.sh
 ## Intent classification
 ```shell
 python train_intent.py
-python test_intent.py --test_file=./data/intent/test.json --ckpt_path=./best.pt
+python test_intent.py --test_file=./data/intent/test.json --ckpt_path=./previous_model_weight/gru....pt
 ```
