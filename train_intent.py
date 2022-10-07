@@ -94,7 +94,7 @@ def main(args):
                 total_acc.append(acc)
             
             acc = sum(total_acc)/len(total_acc)
-            print("Evaluation acc:%1.3f" %acc, "Evaluation Loss:%2.3f"%(100*total_loss/len(datasets[DEV])))
+            print("Evaluate acc:%1.3f" %acc, "Evaluate Loss:%2.3f"%(100*total_loss/len(datasets[DEV])))
             if acc > best_acc:
                 torch.save(model.state_dict(),"./best.pt")
                 best_acc = acc
