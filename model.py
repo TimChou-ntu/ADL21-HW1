@@ -22,16 +22,16 @@ class SeqClassifier(torch.nn.Module):
         # self.rnn = LSTM(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
         self.rnn = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
         self.classify = torch.nn.Sequential(
-            torch.nn.Linear(hidden_size*2,hidden_size*2),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(0.3),
-            torch.nn.Linear(hidden_size*2,hidden_size),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(0.3),
-            torch.nn.Linear(hidden_size,hidden_size),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(0.3),
-            torch.nn.Linear(hidden_size,num_class)
+            # torch.nn.Linear(hidden_size*2,hidden_size*2),
+            # torch.nn.ReLU(),
+            # torch.nn.Dropout(0.3),
+            # torch.nn.Linear(hidden_size*2,hidden_size),
+            # torch.nn.ReLU(),
+            # torch.nn.Dropout(0.3),
+            # torch.nn.Linear(hidden_size,hidden_size),
+            # torch.nn.ReLU(),
+            # torch.nn.Dropout(0.3),
+            torch.nn.Linear(hidden_size*2,num_class)
             )
         self.init_weight()
 
