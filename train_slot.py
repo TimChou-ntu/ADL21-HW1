@@ -62,9 +62,9 @@ def main(args):
             loss = None
             prediction = None            
 
-            batch['token'] = batch['token'].to(args.device)
+            batch['tokens'] = batch['tokens'].to(args.device)
             batch['tags'] = batch['tags'].to(args.device)
-            prediction = model(batch["token"])
+            prediction = model(batch["tokens"])
             a, b, c = prediction.shape
             prediction = prediction.reshape(-1, c)
             loss = criterion(prediction,batch['tags'].reshape(-1,1))
@@ -86,9 +86,9 @@ def main(args):
             total_loss = 0
             for idx, batch in enumerate(eval_dataloader):
                 prediction = None            
-                batch['token'] = batch['token'].to(args.device)
+                batch['tokens'] = batch['tokens'].to(args.device)
                 batch['tags'] = batch['tags'].to(args.device)
-                prediction = model(batch["token"])
+                prediction = model(batch["tokens"])
 
                 total_loss += criterion(prediction, batch["tags"].reshape(-1,1)).item()
                 acc = count_acc(prediction, batch['tags'].reshape(-1,1))
