@@ -38,8 +38,8 @@ def main(args):
         for split, split_data in data.items()
     }
     # Dataloader
-    train_dataloader = torch.utils.data.Dataloader(datasets[TRAIN],batch_size=args.batch_size,shuffle=True,collate_fn=datasets[TRAIN].collate_fn)
-    eval_dataloader = torch.utils.data.Dataloader(datasets[DEV],batch_size=512,collate_fn=datasets[DEV].collate_fn)
+    train_dataloader = torch.utils.data.DataLoader(datasets[TRAIN],batch_size=args.batch_size,shuffle=True,collate_fn=datasets[TRAIN].collate_fn)
+    eval_dataloader = torch.utils.data.DataLoader(datasets[DEV],batch_size=512,collate_fn=datasets[DEV].collate_fn)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # model
