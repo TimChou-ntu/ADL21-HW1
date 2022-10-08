@@ -37,6 +37,8 @@ def main(args):
         split: SeqTaggingClsDataset(split_data, vocab, tags2idx, args.max_len)
         for split, split_data in data.items()
     }
+    # class num
+    num_classes = datasets[TRAIN].num_classes
     # Dataloader
     train_dataloader = torch.utils.data.DataLoader(datasets[TRAIN],batch_size=args.batch_size,collate_fn=datasets[TRAIN].collate_fn)
     eval_dataloader = torch.utils.data.DataLoader(datasets[DEV],batch_size=512,collate_fn=datasets[DEV].collate_fn)
@@ -66,8 +68,7 @@ def main(args):
             batch['tokens'] = batch['tokens'].to(args.device)
             batch['tags'] = batch['tags'].to(args.device)
             prediction = model(batch["tokens"])
-            a, b, c = prediction.shape
-            prediction = prediction.reshape(-1, c)
+            prediction = prediction.reshape(-1, num_classes)
             loss = criterion(prediction,batch['tags'].reshape(-1))
             loss.backward()
             optimizer.step()
@@ -90,7 +91,7 @@ def main(args):
                 batch['tokens'] = batch['tokens'].to(args.device)
                 batch['tags'] = batch['tags'].to(args.device)
                 prediction = model(batch["tokens"])
-
+                prediction = prediction.reshape(-1, num_classes)
                 total_loss += criterion(prediction, batch["tags"].reshape(-1)).item()
                 acc = count_acc(prediction, batch['tags'].reshape(-1))
                 total_acc.append(acc)
