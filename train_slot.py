@@ -67,12 +67,12 @@ def main(args):
             prediction = model(batch["tokens"])
             a, b, c = prediction.shape
             prediction = prediction.reshape(-1, c)
-            loss = criterion(prediction,batch['tags'].reshape(-1,1))
+            loss = criterion(prediction,batch['tags'].reshape(-1))
             loss.backward()
             optimizer.step()
 
             total_loss += loss.item()
-            acc = count_acc(prediction, batch['tags'].reshape(-1,1))
+            acc = count_acc(prediction, batch['tags'].reshape(-1))
             total_acc.append(acc)
         # lr_scheduler.step()
 
@@ -90,8 +90,8 @@ def main(args):
                 batch['tags'] = batch['tags'].to(args.device)
                 prediction = model(batch["tokens"])
 
-                total_loss += criterion(prediction, batch["tags"].reshape(-1,1)).item()
-                acc = count_acc(prediction, batch['tags'].reshape(-1,1))
+                total_loss += criterion(prediction, batch["tags"].reshape(-1)).item()
+                acc = count_acc(prediction, batch['tags'].reshape(-1))
                 total_acc.append(acc)
             
             acc = sum(total_acc)/len(total_acc)
