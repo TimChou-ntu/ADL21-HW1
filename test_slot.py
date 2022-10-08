@@ -21,7 +21,7 @@ def main(args):
     tag2idx_path = args.cache_dir / "tag2idx.json"
     tag2idx: Dict[str, int] = json.loads(tag2idx_path.read_text())
 
-    data = json.loads(args.test_file.read_text())
+    data = json.loads(args.data_dir.read_text())
     dataset = SeqTaggingClsDataset(data, vocab, tag2idx, args.max_len,train=False)
     # TODO: crecate DataLoader for test dataset
     test_dataloader = torch.utils.data.DataLoader(dataset=dataset, batch_size=512,collate_fn=dataset.collate_fn)
@@ -73,7 +73,7 @@ def parse_args() -> Namespace:
         "--data_dir",
         type=Path,
         help="Directory to the dataset.",
-        default="./data/slot/",
+        default="./data/slot/test.json",
     )
     parser.add_argument(
         "--cache_dir",
@@ -85,7 +85,7 @@ def parse_args() -> Namespace:
         "--ckpt_dir",
         type=Path,
         help="Directory to save the model file.",
-        default="./ckpt/slot/",
+        default="./slot.pt",
     )
     parser.add_argument("--pred_file", type=Path, default="pred.slot.csv")
 
@@ -102,7 +102,7 @@ def parse_args() -> Namespace:
     parser.add_argument("--batch_size", type=int, default=128)
 
     parser.add_argument(
-        "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cpu"
+        "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cuda"
     )
     args = parser.parse_args()
     return args
