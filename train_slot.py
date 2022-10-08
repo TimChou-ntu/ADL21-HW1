@@ -18,9 +18,15 @@ TRAIN = "train"
 DEV = "eval"
 SPLITS = [TRAIN, DEV]
 
-def count_acc(prediction, label):
+def count_acc(prediction, label, seq_len):
     pred = torch.argmax(prediction, dim=1)
-    return 100*((pred == label).type(torch.cuda.FloatTensor).mean().item())
+    index = 0
+    acc = 0
+    for i in seq_len:
+        if (prediction[index:index+i] == label[index:index+i]):
+            index += i
+            acc += 1
+    return 100*acc/len(seq_len)
 
 
 
@@ -73,7 +79,7 @@ def main(args):
             optimizer.step()
 
             total_loss += loss.item()
-            acc = count_acc(prediction, batch['tags'].reshape(-1))
+            acc = count_acc(prediction, batch['tags'].reshape(-1),batch['seq_len'])
             total_acc.append(acc)
         # lr_scheduler.step()
 
@@ -92,7 +98,7 @@ def main(args):
                 prediction = model(batch["tokens"])
                 prediction = prediction.reshape(-1, num_classes)
                 total_loss += criterion(prediction, batch["tags"].reshape(-1)).item()
-                acc = count_acc(prediction, batch['tags'].reshape(-1))
+                acc = count_acc(prediction, batch['tags'].reshape(-1),batch['seq_len'])
                 total_acc.append(acc)
             
             acc = sum(total_acc)/len(total_acc)
