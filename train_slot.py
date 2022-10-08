@@ -23,7 +23,7 @@ def count_acc(prediction, label, seq_len):
     index = 0
     acc = 0
     for i in seq_len:
-        if (pred[index:index+i] == label[index:index+i]):
+        if all(pred[index:index+i] == label[index:index+i]):
             index += i
             acc += 1
     return 100*acc/len(seq_len)
