@@ -63,7 +63,7 @@ def main(args):
             index = 0
             basis = max(batch['seq_len'])
             for idx, i in enumerate(batch['seq_len']):
-                pred = " ".join([dataset.idx2label(i) for i in pred[index:index+i].tolist()])
+                pred = " ".join([dataset.idx2label(i) for i in (pred[index:index+i].tolist())])
                 writer.writerow([batch['id'][idx],pred])
                 index += basis
 
