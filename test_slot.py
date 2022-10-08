@@ -38,7 +38,7 @@ def main(args):
     )
     model.eval()
 
-    ckpt = torch.load(args.ckpt_path)
+    ckpt = torch.load(args.ckpt_dir)
     # load weights into model
     model.load_state_dict(ckpt)
     model.to(args.device)
