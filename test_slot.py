@@ -53,7 +53,6 @@ def main(args):
         # TODO: predict dataset
         for idx, batch in enumerate(test_dataloader):
             batch['tokens'] = batch['tokens'].to(args.device)
-            batch['tags'] = batch['tags'].to(args.device)
             prediction = model(batch["tokens"])
             prediction = prediction.reshape(-1, num_classes)
 
