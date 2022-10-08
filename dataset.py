@@ -22,11 +22,6 @@ class SeqClsDataset(Dataset):
         self.max_len = max_len
         self.train = train
 
-        ## preprocess
-            ## intent
-        if self.train:
-            for d in self.data:
-                d["intent"] = self.label2idx(d["intent"])
 
 
     def __len__(self) -> int:
@@ -46,7 +41,7 @@ class SeqClsDataset(Dataset):
         text = self.vocab.encode_batch(text)
         id = [i['id'] for i in samples]
         if self.train:
-            intent = [i['intent'] for i in samples]
+            intent = [self.label2idx(i['intent']) for i in samples]
             return {"text":torch.Tensor(text).long(),"id":id,"intent":torch.Tensor(intent).long()}
         else:
             return {"text":torch.Tensor(text).long(),"id":id}
@@ -63,4 +58,15 @@ class SeqTaggingClsDataset(SeqClsDataset):
 
     def collate_fn(self, samples):
         # TODO: implement collate_fn
+        tokens = [i["tokens"] for i in samples]
+        tokens = self.vocab.encode_batch(tokens)
+        id = [i["id"] for i in samples]
+        if self.train:
+            tags = [[self.label2idx(x) for x in i["tags"]] for i in samples]
+            return {"tokens":torch.Tensor(tokens).long(),"id":id,"tags":torch.Tensor(tags).long()}
+        else:
+            return {"tokens":torch.Tensor(tokens).long(),"id":id}
+
+
+
         raise NotImplementedError
