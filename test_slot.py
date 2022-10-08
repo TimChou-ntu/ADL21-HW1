@@ -52,6 +52,8 @@ def main(args):
         writer.writerow(["id","tags"])
         # TODO: predict dataset
         for idx, batch in enumerate(test_dataloader):
+            prediction = 0
+            pred = 0
             batch['tokens'] = batch['tokens'].to(args.device)
             prediction = model(batch["tokens"])
             prediction = prediction.reshape(-1, num_classes)
@@ -61,7 +63,8 @@ def main(args):
             index = 0
             basis = max(batch['seq_len'])
             for idx, i in enumerate(batch['seq_len']):
-                writer.writerow([batch['id'][idx],pred[index:index+i]])
+                pred = " ".join([dataset.idx2label(i) for i in pred[index:index+i].tolist()])
+                writer.writerow([batch['id'][idx],pred])
                 index += basis
 
 
