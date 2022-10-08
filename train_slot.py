@@ -29,7 +29,7 @@ def main(args):
     with open(args.cache_dir / "vocab.pkl", "rb") as f:
         vocab: Vocab = pickle.load(f)
     tags2idx_path = args.cache_dir / "tags2idx.json"
-    tags2idx: Dict[str,int] = json.loads(tags2idx_path.read_token())
+    tags2idx: Dict[str,int] = json.loads(tags2idx_path.read_text())
 
     data_paths = {split: args.data_dir / f"{split}.json" for split in SPLITS}
     data = {split: json.loads(path.read_token()) for split, path in data_paths.items()}
