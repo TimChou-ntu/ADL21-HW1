@@ -43,19 +43,27 @@ def main(args):
     model.load_state_dict(ckpt)
     model.to(args.device)
 
+    # class num
+    num_classes = dataset.num_classes
+
+
     with open(args.pred_file,'w',newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["id","tags"])
         # TODO: predict dataset
         for idx, batch in enumerate(test_dataloader):
-            batch['text'] = batch['text'].to(args.device)
-            prediction = model(batch['text'])
-            prediction = torch.argmax(prediction, dim=1)
-            prediction = [dataset.idx2label(i) for i in prediction.tolist()]
+            batch['tokens'] = batch['tokens'].to(args.device)
+            batch['tags'] = batch['tags'].to(args.device)
+            prediction = model(batch["tokens"])
+            prediction = prediction.reshape(-1, num_classes)
 
         # TODO: write prediction to file (args.pred_file)
-            for i in range(len(prediction)):
-                writer.writerow([batch['id'][i],prediction[i]])
+            pred = torch.argmax(prediction, dim=1)
+            index = 0
+            basis = max(batch['seq_len'])
+            for idx, i in enumerate(batch['seq_len']):
+                writer.writerow([batch['id'][idx],pred[index:index+i]])
+                index += basis
 
 
 
