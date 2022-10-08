@@ -32,7 +32,7 @@ def main(args):
     tags2idx: Dict[str,int] = json.loads(tags2idx_path.read_text())
 
     data_paths = {split: args.data_dir / f"{split}.json" for split in SPLITS}
-    data = {split: json.loads(path.read_token()) for split, path in data_paths.items()}
+    data = {split: json.loads(path.read_text()) for split, path in data_paths.items()}
     datasets: Dict[str, SeqTaggingClsDataset] = {
         split: SeqTaggingClsDataset(split_data, vocab, tags2idx, args.max_len)
         for split, split_data in data.items()
