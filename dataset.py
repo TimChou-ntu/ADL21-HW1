@@ -59,13 +59,14 @@ class SeqTaggingClsDataset(SeqClsDataset):
     def collate_fn(self, samples):
         # TODO: implement collate_fn
         tokens = [i["tokens"] for i in samples]
+        seq_len = [len(i) for i in tokens]
         tokens = self.vocab.encode_batch(tokens)
         id = [i["id"] for i in samples]
         if self.train:
-            tags = [[self.label2idx(x) for x in i["tags"]] for i in samples]
-            return {"tokens":torch.Tensor(tokens).long(),"id":id,"tags":torch.Tensor(tags).long()}
+            tags = torch.nn.utils.rnn.pad_sequence([torch.Tensor([self.label2idx(x) for x in i["tags"]]) for i in samples])
+            return {"tokens":torch.Tensor(tokens).long(),"id":id,"seq_len":seq_len,"tags":torch.Tensor(tags).long()}
         else:
-            return {"tokens":torch.Tensor(tokens).long(),"id":id}
+            return {"tokens":torch.Tensor(tokens).long(),"id":id,"seq_len":seq_len}
 
 
 
