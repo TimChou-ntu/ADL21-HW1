@@ -22,10 +22,11 @@ def count_acc(prediction, label, seq_len):
     pred = torch.argmax(prediction, dim=1)
     index = 0
     acc = 0
+    basis = max(seq_len)
     for i in seq_len:
         if all(pred[index:index+i] == label[index:index+i]):
-            index += i
             acc += 1
+        index += basis    
     return 100*acc/len(seq_len)
 
 
