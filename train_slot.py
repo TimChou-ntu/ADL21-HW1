@@ -60,7 +60,6 @@ def main(args):
         total_loss = 0
         total_acc = []
         for idx, batch in enumerate(train_dataloader):
-            print(idx)
             optimizer.zero_grad()
             loss = None
             prediction = None            
