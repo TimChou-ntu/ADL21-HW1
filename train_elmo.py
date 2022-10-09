@@ -35,7 +35,7 @@ def main_elmo(args):
         json_file = "intent2idx.json"
         input_name = "text"
     elif args.mode == 'slot':
-        json_file = "tags2idx.json"
+        json_file = "tag2idx.json"
         input_name = "tokens"
     # TODO: implement main function
     with open(args.cache_dir / "vocab.pkl", "rb") as f:
