@@ -31,10 +31,16 @@ def count_acc(prediction, label, seq_len, joint=True):
 
 
 def main_elmo(args):
+    if args.mode == 'intent':
+        json_file = "intent2idx.json"
+        input_name = "text"
+    elif args.mode == 'slot':
+        json_file = "tags2idx.json"
+        input_name = "tokens"
     # TODO: implement main function
     with open(args.cache_dir / "vocab.pkl", "rb") as f:
         vocab: Vocab = pickle.load(f)
-    tags2idx_path = args.cache_dir / "tag2idx.json"
+    tags2idx_path = args.cache_dir / json_file
     tags2idx: Dict[str,int] = json.loads(tags2idx_path.read_text())
 
     data_paths = {split: args.data_dir / f"{split}.json" for split in SPLITS}
@@ -73,9 +79,9 @@ def main_elmo(args):
             loss = None
             prediction = None            
 
-            batch['tokens'] = batch['tokens'].to(args.device)
+            batch[input_name] = batch[input_name].to(args.device)
             prediction1, prediction2, z = model(batch["tokens"])
-            input_tokens = batch['tokens'].reshape(-1).long()
+            input_tokens = batch[input_name].reshape(-1).long()
             prediction1 = prediction1.reshape(-1, num_classes)
             prediction2 = prediction2.reshape(-1, num_classes)
             p1 = torch.Tensor([]).float().to(args.device)
@@ -116,9 +122,9 @@ def main_elmo(args):
             total_loss2 = 0
             for idx, batch in enumerate(eval_dataloader):
                 prediction = None            
-                batch['tokens'] = batch['tokens'].to(args.device)
+                batch[input_name] = batch[input_name].to(args.device)
                 prediction1, prediction2, z = model(batch["tokens"])
-                input_tokens = batch['tokens'].reshape(-1).long()
+                input_tokens = batch[input_name].reshape(-1).long()
                 prediction1 = prediction1.reshape(-1, num_classes)
                 prediction2 = prediction2.reshape(-1, num_classes)
                 p1 = torch.Tensor([]).float().to(args.device)
@@ -157,6 +163,12 @@ def main_elmo(args):
 
 def parse_args() -> Namespace:
     parser = ArgumentParser()
+    parser.add_argument(
+        "--mode",
+        type=str,
+        help="intent or slot",
+        required=True
+    )
     parser.add_argument(
         "--data_dir",
         type=Path,

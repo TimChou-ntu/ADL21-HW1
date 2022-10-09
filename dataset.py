@@ -39,12 +39,13 @@ class SeqClsDataset(Dataset):
         # TODO: implement collate_fn
         text = [i['text'].split() for i in samples]
         text = self.vocab.encode_batch(text)
+        seq_len = [len(i) for i in tokens]
         id = [i['id'] for i in samples]
         if self.train:
             intent = [self.label2idx(i['intent']) for i in samples]
-            return {"text":torch.Tensor(text).long(),"id":id,"intent":torch.Tensor(intent).long()}
+            return {"text":torch.Tensor(text).long(),"id":id,"seq_len":seq_len,"intent":torch.Tensor(intent).long()}
         else:
-            return {"text":torch.Tensor(text).long(),"id":id}
+            return {"text":torch.Tensor(text).long(),"id":id,"seq_len":seq_len}
 
     def label2idx(self, label: str):
         return self.label_mapping[label]
