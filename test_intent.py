@@ -7,7 +7,7 @@ from typing import Dict
 import torch
 import csv
 from dataset import SeqClsDataset
-from model import SeqClassifier
+from model import SeqClassifier, Elmo_embedding
 from utils import Vocab
 
 
@@ -33,12 +33,20 @@ def main(args):
         args.bidirectional,
         dataset.num_classes,
     )
-    model.eval()
+    elmo = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes_vocab)
 
+    elmo.to(args.device)
+
+    model.eval()
+    elmo.eval()
     ckpt = torch.load(args.ckpt_path)
     # load weights into model
     model.load_state_dict(ckpt)
     model.to(args.device)
+    ckpt_e = torch.load('./elmo.pt')
+    elmo.load_state_dict(ckpt_e)
+    elmo.to(args.device)
+
 
     with open(args.pred_file,'w',newline='') as csvfile:
         writer = csv.writer(csvfile)
@@ -46,7 +54,8 @@ def main(args):
         # TODO: predict dataset
         for idx, batch in enumerate(test_dataloader):
             batch['text'] = batch['text'].to(args.device)
-            prediction = model(batch['text'])
+            p1, p2, elmo_embedding = elmo(batch['text'])
+            prediction = model((batch['text'],elmo_embedding))
             prediction = torch.argmax(prediction, dim=1)
             prediction = [dataset.idx2label(i) for i in prediction.tolist()]
 
