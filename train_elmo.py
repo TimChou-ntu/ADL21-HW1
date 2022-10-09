@@ -19,27 +19,27 @@ DEV = "eval"
 SPLITS = [TRAIN, DEV]
 
 # ACC
-# def count_acc(prediction, label, seq_len, joint=True):
-#     pred = torch.argmax(prediction, dim=1)
-#     index = 0
-#     acc = 0
-#     basis = max(seq_len)
-#     for i in seq_len:
-#         acc += sum((pred[index:index+i] == label[index:index+i]).tolist())
-#         index += basis    
-#     return 100*acc/sum(seq_len)
-
-def count_acc(prediction, label, seq_len):
+def count_acc(prediction, label, seq_len, joint=True):
     pred = torch.argmax(prediction, dim=1)
     index = 0
     acc = 0
     basis = max(seq_len)
     for i in seq_len:
-        if all(pred[index:index+i] == label[index:index+i]):
-            acc += 1
-        index += basis
+        acc += sum((pred[index:index+i] == label[index:index+i]).tolist())
+        index += basis    
+    return 100*acc/sum(seq_len)
+
+# def count_acc(prediction, label, seq_len):
+#     pred = torch.argmax(prediction, dim=1)
+#     index = 0
+#     acc = 0
+#     basis = max(seq_len)
+#     for i in seq_len:
+#         if all(pred[index:index+i] == label[index:index+i]):
+#             acc += 1
+#         index += basis
         
-    return 100*acc/len(seq_len)
+#     return 100*acc/len(seq_len)
 
 
 
