@@ -94,7 +94,9 @@ class SeqTagger(torch.nn.Module):
 
     def forward(self, batch) -> Dict[str, torch.Tensor]:
         # TODO: implement model forward
-        x = self.embed(batch)
+        tokens, elmo = batch
+        x = self.embed(tokens)
+        x = torch.cat((x,elmo),dim=2)
         y, h_n = self.rnn(x)
         a, b, c = y.shape
         per_token_prediction = self.classify(y)
@@ -146,6 +148,6 @@ class Elmo_embedding(torch.nn.Module):
         y2 = y[:,:,int(c/2):]
         per_token_prediction1 = self.classify1(y1)
         per_token_prediction2 = self.classify2(y2)
-        return per_token_prediction1, per_token_prediction2
+        return per_token_prediction1, per_token_prediction2, y
 
         raise NotImplementedError
