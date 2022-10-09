@@ -81,11 +81,11 @@ def main(args):
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_acc = 0
-    elmo.eval()
     for epoch in epoch_pbar:
         # TODO: Training loop - iterate over train dataloader and update model weights
         # TRAIN
         model.train()
+        elmo.train()
         total_loss = 0
         total_acc = []
         for idx, batch in enumerate(train_dataloader):
@@ -113,6 +113,7 @@ def main(args):
         # TODO: Evaluation loop - calculate accuracy and save model weights
         with torch.no_grad():
             model.eval()
+            elmo.eval()
             total_acc = []
             total_loss = 0
             for idx, batch in enumerate(eval_dataloader):
