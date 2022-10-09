@@ -82,7 +82,16 @@ def main(args):
             batch['tags'] = batch['tags'].to(args.device)
             prediction = model(batch["tokens"])
             prediction = prediction.reshape(-1, num_classes)
-            loss = criterion(prediction,batch['tags'].reshape(-1))
+            target = batch['tags'].reshape(-1)
+            p = torch.Tensor([])
+            t = torch.Tensor([])
+            index = 0
+            basis = max(batch['seq_len'])
+            for length in batch['seq_len']:
+                p = torch.cat((p,prediction[index:index+length,:]),dim=0)
+                t = torch.cat((t,target[index:index+length]),dim=0)
+                index += basis
+            loss = criterion(p,t)
             loss.backward()
             optimizer.step()
 
