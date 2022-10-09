@@ -18,22 +18,17 @@ TRAIN = "train"
 DEV = "eval"
 SPLITS = [TRAIN, DEV]
 
-# Joint ACC
-# def count_acc(prediction, label, seq_len):
-#     pred = torch.argmax(prediction, dim=1)
-#     index = 0
-#     acc = 0
-#     basis = max(seq_len)
-#     for i in seq_len:
-#         if all(pred[index:index+i] == label[index:index+i]):
-#             acc += 1
-#         index += basis    
-#     return 100*acc/len(seq_len)
-
-# ACC
 def count_acc(prediction, label, seq_len):
     pred = torch.argmax(prediction, dim=1)
-    return 100*((pred == label).type(torch.cuda.FloatTensor).mean().item())
+    index = 0
+    acc = 0
+    basis = max(seq_len)
+    for i in seq_len:
+        if all(pred[index:index+i] == label[index:index+i]):
+            acc += 1
+        index += basis
+        
+    return 100*acc/len(seq_len)
 
 
 
@@ -51,15 +46,14 @@ def main(args):
         for split, split_data in data.items()
     }
     # class num
-    # num_classes = datasets[TRAIN].num_classes
-    num_classes = len(vocab.token2idx)
+    num_classes = datasets[TRAIN].num_classes
     # Dataloader
     train_dataloader = torch.utils.data.DataLoader(datasets[TRAIN],batch_size=args.batch_size,collate_fn=datasets[TRAIN].collate_fn)
     eval_dataloader = torch.utils.data.DataLoader(datasets[DEV],batch_size=512,collate_fn=datasets[DEV].collate_fn)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # model
-    model = SeqTagger(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes)
+    model = SeqTagger(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes)
     model.to(args.device)
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
@@ -82,16 +76,7 @@ def main(args):
             batch['tags'] = batch['tags'].to(args.device)
             prediction = model(batch["tokens"])
             prediction = prediction.reshape(-1, num_classes)
-            target = batch['tags'].reshape(-1)
-            p = torch.Tensor([])
-            t = torch.Tensor([])
-            index = 0
-            basis = max(batch['seq_len'])
-            for length in batch['seq_len']:
-                p = torch.cat((p,prediction[index:index+length,:]),dim=0)
-                t = torch.cat((t,target[index:index+length]),dim=0)
-                index += basis
-            loss = criterion(p,t)
+            loss = criterion(prediction,batch['tags'].reshape(-1))
             loss.backward()
             optimizer.step()
 
