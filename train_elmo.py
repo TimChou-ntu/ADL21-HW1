@@ -163,8 +163,8 @@ def main_elmo(args):
     model = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes)
     model.to(args.device)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=-1)
-    # optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+    optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50,100,150], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
