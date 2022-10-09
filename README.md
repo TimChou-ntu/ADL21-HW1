@@ -22,3 +22,8 @@ python train_elmo.py --data_dir=./data/intent/ --cache_dir=./cache/intent/ --ckp
 python train_intent.py
 python test_intent.py --test_file=./data/intent/test.json --ckpt_path=./previous_model_weight/gru....pt
 ```
+
+## Slot tagging
+'''shell
+python train_elmo.py --data_dir=./data/slot/ --cache_dir=./cache/slot/ --ckpt_dir=./ckpt/slot/ --mode=slot
+
