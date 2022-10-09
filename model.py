@@ -146,7 +146,7 @@ class Elmo_embedding(torch.nn.Module):
         # TODO: implement model forward
         x = self.embed(batch)
         y, h_n = self.rnn1(x)
-        z = self.rnn2(y)
+        z, h_nn = self.rnn2(y)
         a, b, c = z.shape
         z1 = z[:,:,:int(c/2)]
         z2 = z[:,:,int(c/2):]
