@@ -82,8 +82,8 @@ def main(args):
             prediction2 = prediction2.reshape(-1, num_classes)
             p1 = torch.Tensor([]).float().to(args.device)
             p2 = torch.Tensor([]).float().to(args.device)
-            t1 = torch.Tensor([]).float().to(args.device)
-            t2 = torch.Tensor([]).float().to(args.device)
+            t1 = torch.Tensor([]).int().to(args.device)
+            t2 = torch.Tensor([]).int().to(args.device)
             index = 0
             basis = max(batch['seq_len'])
             for length in batch['seq_len']:
@@ -125,8 +125,8 @@ def main(args):
                 prediction2 = prediction2.reshape(-1, num_classes)
                 p1 = torch.Tensor([]).float().to(args.device)
                 p2 = torch.Tensor([]).float().to(args.device)
-                t1 = torch.Tensor([]).float().to(args.device)
-                t2 = torch.Tensor([]).float().to(args.device)
+                t1 = torch.Tensor([]).int().to(args.device)
+                t2 = torch.Tensor([]).int().to(args.device)
                 index = 0
                 basis = max(batch['seq_len'])
                 for length in batch['seq_len']:
