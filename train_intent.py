@@ -45,6 +45,9 @@ def main(args):
     # TODO: init model and move model to target device(cpu / gpu)
     model = SeqClassifier(embeddings=embeddings,hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes)
     elmo = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes_vocab)
+    ckpt = torch.load("./elmo.pt")
+    # load weights into model
+    elmo.load_state_dict(ckpt)
 
     elmo.to(args.device)
     model.to(args.device)

@@ -148,7 +148,7 @@ def main_elmo(args):
             acc2 = sum(total_acc2)/len(total_acc2)
             print("Evaluate acc1:%1.3f" %acc1,"Evaluate acc2:%1.3f" %acc2, "Evaluate Loss1:%2.3f"%(10000*total_loss1/len(datasets[DEV])), "Evaluate Loss2:%2.3f"%(10000*total_loss2/len(datasets[DEV])))
             if acc1+acc2 > best_acc:
-                torch.save(model.state_dict(),"./elmo.pt")
+                torch.save(model.state_dict(),args.ckpt_dir+"/elmo.pt")
                 best_acc = acc1+acc2
 
 
