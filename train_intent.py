@@ -73,7 +73,7 @@ def main(args):
             total_loss += loss.item()
             acc = count_acc(prediction, batch['intent'])
             total_acc.append(acc)
-        # lr_scheduler.step()
+        lr_scheduler.step()
 
 
         print("Training acc: %2.3f" %(sum(total_acc)/len(total_acc)), "Training Loss: %1.3f"%(100*total_loss/len(datasets[TRAIN])))
