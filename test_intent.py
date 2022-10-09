@@ -22,6 +22,7 @@ def main(args):
     dataset = SeqClsDataset(data, vocab, intent2idx, args.max_len,train=False)
     # TODO: crecate DataLoader for test dataset
     test_dataloader = torch.utils.data.DataLoader(dataset=dataset, batch_size=512,collate_fn=dataset.collate_fn)
+    num_classes_vocab = len(vocab.token2idx)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
 
