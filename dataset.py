@@ -38,8 +38,8 @@ class SeqClsDataset(Dataset):
     def collate_fn(self, samples: List[Dict]) -> Dict:
         # TODO: implement collate_fn
         text = [i['text'].split() for i in samples]
+        seq_len = [len(i) for i in text]
         text = self.vocab.encode_batch(text)
-        seq_len = [len(i) for i in tokens]
         id = [i['id'] for i in samples]
         if self.train:
             intent = [self.label2idx(i['intent']) for i in samples]
