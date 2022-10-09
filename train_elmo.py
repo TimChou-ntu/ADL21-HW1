@@ -86,7 +86,7 @@ def main_elmo(args):
             prediction = None            
 
             batch[input_name] = batch[input_name].to(args.device)
-            prediction1, prediction2, z = model(batch["tokens"])
+            prediction1, prediction2, z = model(batch[input_name])
             input_tokens = batch[input_name].reshape(-1).long()
             prediction1 = prediction1.reshape(-1, num_classes)
             prediction2 = prediction2.reshape(-1, num_classes)
@@ -129,7 +129,7 @@ def main_elmo(args):
             for idx, batch in enumerate(eval_dataloader):
                 prediction = None            
                 batch[input_name] = batch[input_name].to(args.device)
-                prediction1, prediction2, z = model(batch["tokens"])
+                prediction1, prediction2, z = model(batch[input_name])
                 input_tokens = batch[input_name].reshape(-1).long()
                 prediction1 = prediction1.reshape(-1, num_classes)
                 prediction2 = prediction2.reshape(-1, num_classes)
