@@ -31,7 +31,7 @@ SPLITS = [TRAIN, DEV]
 #     return 100*acc/len(seq_len)
 
 # ACC
-def count_acc(prediction, label):
+def count_acc(prediction, label, seq_len):
     pred = torch.argmax(prediction, dim=1)
     return 100*((pred == label).type(torch.cuda.FloatTensor).mean().item())
 
