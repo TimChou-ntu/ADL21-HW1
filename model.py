@@ -22,13 +22,13 @@ class SeqClassifier(torch.nn.Module):
         # self.rnn = LSTM(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
         self.rnn = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
         self.classify = torch.nn.Sequential(
-            torch.nn.Linear(hidden_size*4,hidden_size*4),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(0.3),
-            torch.nn.Linear(hidden_size*4,hidden_size*2),
+            torch.nn.Linear(hidden_size*2,hidden_size*2),
             torch.nn.ReLU(),
             torch.nn.Dropout(0.3),
             torch.nn.Linear(hidden_size*2,hidden_size),
+            torch.nn.ReLU(),
+            torch.nn.Dropout(0.3),
+            torch.nn.Linear(hidden_size,hidden_size),
             torch.nn.ReLU(),
             torch.nn.Dropout(0.3),
             torch.nn.Linear(hidden_size,num_class)
@@ -51,11 +51,9 @@ class SeqClassifier(torch.nn.Module):
         x = self.embed(batch)
         y, h_n = self.rnn(x)
         a, b, c = y.shape
-        h_n = torch.permute(h_n,(1,0,2)).reshape(a,-1)
-        prediction = self.classify(h_n)
-        # z = y.reshape((a,b, 2, -1))
-        # z = torch.cat((z[:, 0, 1,:],z[:, -1, 0,:]),1)
-        # prediction = self.classify(z)
+        z = y.reshape((a,b, 2, -1))
+        z = torch.cat((z[:, 0, 1,:],z[:, -1, 0,:]),1)
+        prediction = self.classify(z)
         return prediction
         raise NotImplementedError
 
@@ -117,15 +115,14 @@ class Elmo_embedding(torch.nn.Module):
     ) -> None:
         super(SeqTagger, self).__init__()
         self.embed = Embedding.from_pretrained(embeddings, freeze=False)
-        self.rnn1 = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
-        self.rnn2 = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
-        self.classify = torch.nn.Sequential(
-            torch.nn.Linear(hidden_size*2,hidden_size*2),
+        self.rnn = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
+        self.classify1 = torch.nn.Sequential(
+            torch.nn.Linear(hidden_size,hidden_size),
             torch.nn.ReLU(),
             torch.nn.Dropout(0.3),
-            torch.nn.Linear(hidden_size*2,hidden_size),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(0.3),
+            torch.nn.Linear(hidden_size,num_class)
+            )
+        self.classify2 = torch.nn.Sequential(
             torch.nn.Linear(hidden_size,hidden_size),
             torch.nn.ReLU(),
             torch.nn.Dropout(0.3),
@@ -145,7 +142,10 @@ class Elmo_embedding(torch.nn.Module):
         x = self.embed(batch)
         y, h_n = self.rnn(x)
         a, b, c = y.shape
-        per_token_prediction = self.classify(y)
-        return per_token_prediction
+        y1 = y[:,:,:c/2]
+        y2 = y[:,:,c/2:]
+        per_token_prediction1 = self.classify1(y1)
+        per_token_prediction2 = self.classify2(y2)
+        return per_token_prediction1, per_token_prediction2
 
         raise NotImplementedError

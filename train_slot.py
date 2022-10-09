@@ -48,7 +48,7 @@ def main(args):
     # class num
     num_classes = datasets[TRAIN].num_classes
     # Dataloader
-    train_dataloader = torch.utils.data.DataLoader(datasets[TRAIN],batch_size=args.batch_size,collate_fn=datasets[TRAIN].collate_fn)
+    train_dataloader = torch.utils.data.DataLoader(datasets[TRAIN],batch_size=args.batch_size,collate_fn=datasets[TRAIN].collate_fn,shuffle=True)
     eval_dataloader = torch.utils.data.DataLoader(datasets[DEV],batch_size=512,collate_fn=datasets[DEV].collate_fn)
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
