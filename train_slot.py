@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm, trange
 
 from dataset import SeqTaggingClsDataset
-from model import SeqTagger
+from model import Elmo_embedding, SeqTagger
 from utils import Vocab
 
 TRAIN = "train"
@@ -53,7 +53,7 @@ def main(args):
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # model
-    model = SeqTagger(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes)
+    model = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes)
     model.to(args.device)
     criterion = torch.nn.CrossEntropyLoss(ignore_index=-1)
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
