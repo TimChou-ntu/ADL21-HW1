@@ -58,6 +58,8 @@ def main(args):
     }
     # class num
     num_classes = datasets[TRAIN].num_classes
+    # class num
+    num_classes_vocab = len(vocab.token2idx)
     # Dataloader
     train_dataloader = torch.utils.data.DataLoader(datasets[TRAIN],batch_size=args.batch_size,collate_fn=datasets[TRAIN].collate_fn,shuffle=True)
     eval_dataloader = torch.utils.data.DataLoader(datasets[DEV],batch_size=512,collate_fn=datasets[DEV].collate_fn)
@@ -65,7 +67,7 @@ def main(args):
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # model
     model = SeqTagger(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes)
-    elmo = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes)
+    elmo = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes_vocab)
     model.to(args.device)
 
     ckpt = torch.load("./elmo.pt")
