@@ -119,7 +119,8 @@ class Elmo_embedding(torch.nn.Module):
     ) -> None:
         super(Elmo_embedding, self).__init__()
         self.embed = Embedding.from_pretrained(embeddings, freeze=False)
-        self.rnn = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
+        self.rnn1 = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
+        self.rnn2 = GRU(input_size=hidden_size*2, hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
         self.classify1 = torch.nn.Sequential(
             torch.nn.Linear(hidden_size,hidden_size),
             torch.nn.ReLU(),
@@ -144,12 +145,13 @@ class Elmo_embedding(torch.nn.Module):
     def forward(self, batch) -> Dict[str, torch.Tensor]:
         # TODO: implement model forward
         x = self.embed(batch)
-        y, h_n = self.rnn(x)
-        a, b, c = y.shape
-        y1 = y[:,:,:int(c/2)]
-        y2 = y[:,:,int(c/2):]
-        per_token_prediction1 = self.classify1(y1)
-        per_token_prediction2 = self.classify2(y2)
-        return per_token_prediction1, per_token_prediction2, y
+        y, h_n = self.rnn1(x)
+        z = self.rnn2(y)
+        a, b, c = z.shape
+        z1 = z[:,:,:int(c/2)]
+        z2 = z[:,:,int(c/2):]
+        per_token_prediction1 = self.classify1(z1)
+        per_token_prediction2 = self.classify2(z2)
+        return per_token_prediction1, per_token_prediction2, z
 
         raise NotImplementedError

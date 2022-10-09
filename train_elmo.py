@@ -313,4 +313,5 @@ def parse_args() -> Namespace:
 if __name__ == "__main__":
     args = parse_args()
     args.ckpt_dir.mkdir(parents=True, exist_ok=True)
-    main(args)
+    # main(args)
+    main_elmo(args)
