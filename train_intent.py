@@ -94,7 +94,8 @@ def main(args):
                 prediction = None            
                 batch['text'] = batch['text'].to(args.device)
                 batch['intent'] = batch['intent'].to(args.device)
-                prediction = model(batch["text"])
+                p1, p2, elmo_embedding = elmo(batch['text'])
+                prediction = model((batch["text"],elmo_embedding))
 
                 total_loss += criterion(prediction, batch["intent"]).item()
                 acc = count_acc(prediction, batch['intent'])
