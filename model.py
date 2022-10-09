@@ -113,7 +113,7 @@ class Elmo_embedding(torch.nn.Module):
         bidirectional: bool,
         num_class: int,
     ) -> None:
-        super(SeqTagger, self).__init__()
+        super(Elmo_embedding, self).__init__()
         self.embed = Embedding.from_pretrained(embeddings, freeze=False)
         self.rnn = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
         self.classify1 = torch.nn.Sequential(
