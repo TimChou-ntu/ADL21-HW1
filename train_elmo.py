@@ -10,7 +10,7 @@ from torch.optim import Adam
 from torch.utils.data import DataLoader
 from tqdm import tqdm, trange
 
-from dataset import SeqTaggingClsDataset
+from dataset import SeqTaggingClsDataset, SeqClsDataset
 from model import Elmo_embedding, SeqTagger
 from utils import Vocab
 
@@ -40,15 +40,21 @@ def main_elmo(args):
     # TODO: implement main function
     with open(args.cache_dir / "vocab.pkl", "rb") as f:
         vocab: Vocab = pickle.load(f)
-    tags2idx_path = args.cache_dir / json_file
-    tags2idx: Dict[str,int] = json.loads(tags2idx_path.read_text())
+    label2idx_path = args.cache_dir / json_file
+    label2idx: Dict[str,int] = json.loads(label2idx_path.read_text())
 
     data_paths = {split: args.data_dir / f"{split}.json" for split in SPLITS}
     data = {split: json.loads(path.read_text()) for split, path in data_paths.items()}
-    datasets: Dict[str, SeqTaggingClsDataset] = {
-        split: SeqTaggingClsDataset(split_data, vocab, tags2idx, args.max_len)
+    if args.mode == 'intent':
+        datasets: Dict[str, SeqClsDataset] = {
+        split: SeqClsDataset(split_data, vocab, label2idx, args.max_len)
         for split, split_data in data.items()
     }
+    elif args.mode == 'slot':
+        datasets: Dict[str, SeqTaggingClsDataset] = {
+            split: SeqTaggingClsDataset(split_data, vocab, label2idx, args.max_len)
+            for split, split_data in data.items()
+        }
     # class num
     num_classes = len(vocab.token2idx)
     # Dataloader
