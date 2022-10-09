@@ -142,8 +142,8 @@ class Elmo_embedding(torch.nn.Module):
         x = self.embed(batch)
         y, h_n = self.rnn(x)
         a, b, c = y.shape
-        y1 = y[:,:,:c/2]
-        y2 = y[:,:,c/2:]
+        y1 = y[:,:,:int(c/2)]
+        y2 = y[:,:,int(c/2):]
         per_token_prediction1 = self.classify1(y1)
         per_token_prediction2 = self.classify2(y2)
         return per_token_prediction1, per_token_prediction2
