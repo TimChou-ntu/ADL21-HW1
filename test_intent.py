@@ -36,7 +36,7 @@ def main(args):
     )
     elmo = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes_vocab)
 
-    elmo.to(args.device)
+
 
     model.eval()
     elmo.eval()
