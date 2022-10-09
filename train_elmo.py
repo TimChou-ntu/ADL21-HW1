@@ -77,7 +77,7 @@ def main(args):
 
             batch['tokens'] = batch['tokens'].to(args.device)
             prediction1, prediction2 = model(batch["tokens"])
-            input_tokens = batch['tokens']
+            input_tokens = batch['tokens'].reshape(-1)
             prediction1 = prediction1.reshape(-1, num_classes)
             prediction2 = prediction2.reshape(-1, num_classes)
             p1 = torch.Tensor([]).to(args.device)
