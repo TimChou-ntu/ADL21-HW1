@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from dataset import SeqTaggingClsDataset
-from model import SeqTagger
+from model import SeqTagger, Elmo_embedding
 from utils import Vocab
 
 
@@ -28,6 +28,8 @@ def main(args):
 
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
 
+    num_classes_vocab = len(vocab.token2idx)
+
     model = SeqTagger(
         embeddings,
         args.hidden_size,
@@ -36,12 +38,19 @@ def main(args):
         args.bidirectional,
         dataset.num_classes,
     )
-    model.eval()
+    elmo = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes_vocab)
 
-    ckpt = torch.load(args.ckpt_dir)
+    model.eval()
+    elmo.eval()
+
+    ckpt_m = torch.load(args.ckpt_dir)
     # load weights into model
-    model.load_state_dict(ckpt)
+    model.load_state_dict(ckpt_m)
     model.to(args.device)
+
+    ckpt_e = torch.load('./elmo.pt')
+    elmo.load_state_dict(ckpt_e)
+    elmo.to(args.device)
 
     # class num
     num_classes = dataset.num_classes
@@ -55,7 +64,8 @@ def main(args):
             prediction = 0
             pred = 0
             batch['tokens'] = batch['tokens'].to(args.device)
-            prediction = model(batch["tokens"])
+            p1, p2, elmo_embedding = elmo(batch['tokens'])
+            prediction = model((batch["tokens"], elmo_embedding))
             prediction = prediction.reshape(-1, num_classes)
 
         # TODO: write prediction to file (args.pred_file)
