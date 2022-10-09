@@ -51,7 +51,7 @@ class SeqClassifier(torch.nn.Module):
         x = self.embed(batch)
         y, h_n = self.rnn(x)
         a, b, c = y.shape
-        h_n = torch.permute(h_n,(1,0,2)).view(a,-1)
+        h_n = torch.permute(h_n,(1,0,2)).reshape(a,-1)
         prediction = self.classify(h_n)
         # z = y.reshape((a,b, 2, -1))
         # z = torch.cat((z[:, 0, 1,:],z[:, -1, 0,:]),1)
