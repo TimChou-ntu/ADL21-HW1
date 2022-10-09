@@ -63,7 +63,7 @@ class SeqTaggingClsDataset(SeqClsDataset):
         tokens = self.vocab.encode_batch(tokens)
         id = [i["id"] for i in samples]
         if self.train:
-            tags = torch.nn.utils.rnn.pad_sequence([torch.Tensor([self.label2idx(x) for x in i["tags"]], padding_value=-1) for i in samples],batch_first=True)
+            tags = torch.nn.utils.rnn.pad_sequence([torch.Tensor([self.label2idx(x) for x in i["tags"]]) for i in samples],batch_first=True, padding_value=-1.0)
             return {"tokens":torch.Tensor(tokens).long(),"id":id,"seq_len":seq_len,"tags":torch.Tensor(tags).long()}
         else:
             return {"tokens":torch.Tensor(tokens).long(),"id":id,"seq_len":seq_len}
