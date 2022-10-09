@@ -20,7 +20,7 @@ class SeqClassifier(torch.nn.Module):
         # TODO: model architecture
         # self.rnn = RNN(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
         # self.rnn = LSTM(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
-        self.rnn = GRU(input_size=embeddings.size(1), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
+        self.rnn = GRU(input_size=(embeddings.size(1)+hidden_size*2), hidden_size=hidden_size, num_layers=num_layers, dropout=dropout, bidirectional=bidirectional,batch_first=True)
         self.classify = torch.nn.Sequential(
             torch.nn.Linear(hidden_size*2,hidden_size*2),
             torch.nn.ReLU(),
@@ -48,7 +48,9 @@ class SeqClassifier(torch.nn.Module):
 
     def forward(self, batch) -> Dict[str, torch.Tensor]:
         # TODO: implement model forward
-        x = self.embed(batch)
+        tokens, elmo = batch
+        x = self.embed(tokens)
+        x = torch.cat((x,elmo),dim=2)
         y, h_n = self.rnn(x)
         a, b, c = y.shape
         z = y.reshape((a,b, 2, -1))

@@ -9,7 +9,7 @@ from tqdm import trange
 
 from dataset import SeqClsDataset
 from utils import Vocab
-from model import SeqClassifier
+from model import SeqClassifier, Elmo_embedding
 
 TRAIN = "train"
 DEV = "eval"
@@ -35,6 +35,8 @@ def main(args):
         split: SeqClsDataset(split_data, vocab, intent2idx, args.max_len)
         for split, split_data in data.items()
     }
+    num_classes_vocab = len(vocab.token2idx)
+
     # TODO: crecate DataLoader for train / dev datasets
     train_dataloader = torch.utils.data.DataLoader(dataset=datasets[TRAIN], batch_size=args.batch_size,shuffle=True,collate_fn=datasets[TRAIN].collate_fn)
     eval_dataloader = torch.utils.data.DataLoader(dataset=datasets[DEV], batch_size=512,collate_fn=datasets[DEV].collate_fn)
@@ -42,6 +44,9 @@ def main(args):
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # TODO: init model and move model to target device(cpu / gpu)
     model = SeqClassifier(embeddings=embeddings,hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes)
+    elmo = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes_vocab)
+
+    elmo.to(args.device)
     model.to(args.device)
     criterion = torch.nn.CrossEntropyLoss()
     # TODO: init optimizer
@@ -55,6 +60,7 @@ def main(args):
         # TODO: Training loop - iterate over train dataloader and update model weights
         # TRAIN
         model.train()
+        elmo.train()
         total_loss = 0
         total_acc = []
         for idx, batch in enumerate(train_dataloader):
@@ -64,7 +70,8 @@ def main(args):
 
             batch['text'] = batch['text'].int().to(args.device)
             batch['intent'] = batch['intent'].to(args.device)
-            prediction = model(batch["text"])
+            p1, p2, elmo_embedding = elmo(batch['text'])
+            prediction = model((batch["text"],elmo_embedding))
 
             loss = criterion(prediction,batch['intent'])
             loss.backward()
