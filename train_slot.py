@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm, trange
 
 from dataset import SeqTaggingClsDataset
-from model import SeqTagger
+from model import SeqTagger, Elmo_embedding
 from utils import Vocab
 
 TRAIN = "train"
@@ -47,6 +47,8 @@ def main(args):
     }
     # class num
     num_classes = datasets[TRAIN].num_classes
+    # class num
+    num_classes_vocab = len(vocab.token2idx)
     # Dataloader
     train_dataloader = torch.utils.data.DataLoader(datasets[TRAIN],batch_size=args.batch_size,collate_fn=datasets[TRAIN].collate_fn,shuffle=True)
     eval_dataloader = torch.utils.data.DataLoader(datasets[DEV],batch_size=512,collate_fn=datasets[DEV].collate_fn)
@@ -54,7 +56,14 @@ def main(args):
     embeddings = torch.load(args.cache_dir / "embeddings.pt")
     # model
     model = SeqTagger(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=datasets[TRAIN].num_classes)
+    elmo = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes_vocab)
     model.to(args.device)
+
+    ckpt = torch.load("./elmo.pt")
+    # load weights into model
+    elmo.load_state_dict(ckpt)
+    elmo.to(args.device)
+
     criterion = torch.nn.CrossEntropyLoss(ignore_index=-1)
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
     lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50,100,150], gamma=0.1)
@@ -65,6 +74,7 @@ def main(args):
         # TODO: Training loop - iterate over train dataloader and update model weights
         # TRAIN
         model.train()
+        elmo.train()
         total_loss = 0
         total_acc = []
         for idx, batch in enumerate(train_dataloader):
@@ -74,7 +84,8 @@ def main(args):
 
             batch['tokens'] = batch['tokens'].to(args.device)
             batch['tags'] = batch['tags'].to(args.device)
-            prediction = model(batch["tokens"])
+            p1, p2, elmo_embedding = elmo(batch['tokens'])
+            prediction = model((batch["tokens"],elmo_embedding))
             prediction = prediction.reshape(-1, num_classes)
             loss = criterion(prediction,batch['tags'].reshape(-1))
             loss.backward()
@@ -91,13 +102,15 @@ def main(args):
         # TODO: Evaluation loop - calculate accuracy and save model weights
         with torch.no_grad():
             model.eval()
+            elmo.eval()
             total_acc = []
             total_loss = 0
             for idx, batch in enumerate(eval_dataloader):
                 prediction = None            
                 batch['tokens'] = batch['tokens'].to(args.device)
                 batch['tags'] = batch['tags'].to(args.device)
-                prediction = model(batch["tokens"])
+                p1, p2, elmo_embedding = elmo(batch['tokens'])
+                prediction = model((batch["tokens"],elmo_embedding))
                 prediction = prediction.reshape(-1, num_classes)
                 total_loss += criterion(prediction, batch["tags"].reshape(-1)).item()
                 acc = count_acc(prediction, batch['tags'].reshape(-1),batch['seq_len'])
