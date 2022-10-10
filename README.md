@@ -20,11 +20,12 @@ bash preprocess.sh
 ```shell
 python train_elmo.py --data_dir=./data/intent/ --cache_dir=./cache/intent/ --ckpt_dir=./ckpt/intent/ --mode=intent
 python train_intent.py
-python test_intent.py --test_file=./data/intent/test.json --ckpt_path=./previous_model_weight/gru....pt
+bash inten_cls.sh
 ```
 
 ## Slot tagging
 '''shell
 python train_elmo.py --data_dir=./data/slot/ --cache_dir=./cache/slot/ --ckpt_dir=./ckpt/slot/ --mode=slot
 python train_slot.py
-
+bash slot_tag.sh
+'''
