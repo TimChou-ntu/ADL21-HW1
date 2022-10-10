@@ -24,7 +24,7 @@ def main(args):
     test_dataloader = torch.utils.data.DataLoader(dataset=dataset, batch_size=512,collate_fn=dataset.collate_fn)
     num_classes_vocab = len(vocab.token2idx)
 
-    embeddings = torch.load("./ckpt/intent/embeddings.pt")
+    embeddings = torch.load(args.cache_dir / "embeddings.pt")
 
     model = SeqClassifier(
         embeddings,
@@ -44,7 +44,7 @@ def main(args):
     # load weights into model
     model.load_state_dict(ckpt)
     model.to(args.device)
-    ckpt_e = torch.load(args.ckpt_dir / 'elmo.pt')
+    ckpt_e = torch.load('./ckpt/intent/elmo.pt')
     elmo.load_state_dict(ckpt_e)
     elmo.to(args.device)
 
