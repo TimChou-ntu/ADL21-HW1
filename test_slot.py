@@ -48,7 +48,7 @@ def main(args):
     model.load_state_dict(ckpt_m)
     model.to(args.device)
 
-    ckpt_e = torch.load(args.ckpt_dir / 'elmo.pt')
+    ckpt_e = torch.load('./ckpt/slot/elmo.pt')
     elmo.load_state_dict(ckpt_e)
     elmo.to(args.device)
 

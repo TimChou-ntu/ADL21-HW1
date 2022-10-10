@@ -24,7 +24,7 @@ def main(args):
     test_dataloader = torch.utils.data.DataLoader(dataset=dataset, batch_size=512,collate_fn=dataset.collate_fn)
     num_classes_vocab = len(vocab.token2idx)
 
-    embeddings = torch.load(args.cache_dir / "embeddings.pt")
+    embeddings = torch.load("./ckpt/intent/embeddings.pt")
 
     model = SeqClassifier(
         embeddings,
