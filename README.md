@@ -26,4 +26,5 @@ python test_intent.py --test_file=./data/intent/test.json --ckpt_path=./previous
 ## Slot tagging
 '''shell
 python train_elmo.py --data_dir=./data/slot/ --cache_dir=./cache/slot/ --ckpt_dir=./ckpt/slot/ --mode=slot
+python train_slot.py
 

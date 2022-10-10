@@ -59,7 +59,7 @@ def main(args):
     elmo = Elmo_embedding(embeddings=embeddings, hidden_size=args.hidden_size, num_layers=args.num_layers, dropout=args.dropout, bidirectional=args.bidirectional, num_class=num_classes_vocab)
     model.to(args.device)
 
-    ckpt = torch.load("./elmo.pt")
+    ckpt = torch.load(args.ckpt_dir / "elmo.pt")
     # load weights into model
     elmo.load_state_dict(ckpt)
     elmo.to(args.device)
