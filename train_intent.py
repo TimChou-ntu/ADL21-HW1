@@ -107,7 +107,7 @@ def main(args):
             acc = sum(total_acc)/len(total_acc)
             print("Evaluate acc:%1.3f" %acc, "Evaluate Loss:%2.3f"%(100*total_loss/len(datasets[DEV])))
             if acc > best_acc:
-                torch.save(model.state_dict(),str(args.ckpt_dir)+"intent.pt")
+                torch.save(model.state_dict(),str(args.ckpt_dir)+"/intent.pt")
                 best_acc = acc
 
 

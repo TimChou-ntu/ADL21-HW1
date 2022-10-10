@@ -48,7 +48,7 @@ def main(args):
     model.load_state_dict(ckpt_m)
     model.to(args.device)
 
-    ckpt_e = torch.load('./elmo.pt')
+    ckpt_e = torch.load(args.ckpt_dir / 'elmo.pt')
     elmo.load_state_dict(ckpt_e)
     elmo.to(args.device)
 
@@ -97,7 +97,7 @@ def parse_args() -> Namespace:
         "--ckpt_dir",
         type=Path,
         help="Directory to save the model file.",
-        default="./slot.pt",
+        default="./ckpt/slot/slot.pt",
     )
     parser.add_argument("--pred_file", type=Path, default="pred.slot.csv")
 

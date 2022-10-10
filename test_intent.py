@@ -44,7 +44,7 @@ def main(args):
     # load weights into model
     model.load_state_dict(ckpt)
     model.to(args.device)
-    ckpt_e = torch.load('./elmo.pt')
+    ckpt_e = torch.load(args.ckpt_dir / 'elmo.pt')
     elmo.load_state_dict(ckpt_e)
     elmo.to(args.device)
 
@@ -82,7 +82,7 @@ def parse_args() -> Namespace:
         "--ckpt_path",
         type=Path,
         help="Path to model checkpoint.",
-        default="best.pt"
+        default="./ckpt/intent/intent.pt"
     )
     parser.add_argument("--pred_file", type=Path, default="pred.intent.csv")
 
