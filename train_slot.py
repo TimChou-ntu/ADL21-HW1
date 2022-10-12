@@ -13,7 +13,8 @@ from tqdm import tqdm, trange
 from dataset import SeqTaggingClsDataset
 from model import SeqTagger, Elmo_embedding
 from utils import Vocab
-
+from seqeval.metrics import classification_report
+from seqeval.scheme import IOB2
 TRAIN = "train"
 DEV = "eval"
 SPLITS = [TRAIN, DEV]
@@ -66,7 +67,7 @@ def main(args):
 
     criterion = torch.nn.CrossEntropyLoss(ignore_index=-1)
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
-    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50,100,150], gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[0,80,120], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_acc = 0
@@ -146,8 +147,6 @@ def parse_args() -> Namespace:
         help="Directory to save the model file.",
         default="./ckpt/slot/",
     )
-
-    # data
     parser.add_argument("--max_len", type=int, default=128)
 
     # model
@@ -166,7 +165,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cuda"
     )
-    parser.add_argument("--num_epoch", type=int, default=300)
+    parser.add_argument("--num_epoch", type=int, default=150)
 
     args = parser.parse_args()
     return args

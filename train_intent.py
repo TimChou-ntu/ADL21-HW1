@@ -11,6 +11,9 @@ from dataset import SeqClsDataset
 from utils import Vocab
 from model import SeqClassifier, Elmo_embedding
 
+from seqeval.metrics import classification_report
+from seqeval.scheme import IOB2
+
 TRAIN = "train"
 DEV = "eval"
 SPLITS = [TRAIN, DEV]
@@ -55,7 +58,7 @@ def main(args):
     # TODO: init optimizer
     # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
-    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50,100,150], gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[40,80,120], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_acc = 0
@@ -134,7 +137,6 @@ def parse_args() -> Namespace:
     )
     parser.add_argument(
         "--ckpt_dir",
-        type=Path,
         help="Directory to save the model file.",
         default="./ckpt/intent/",
     )
@@ -158,7 +160,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cuda"
     )
-    parser.add_argument("--num_epoch", type=int, default=200)
+    parser.add_argument("--num_epoch", type=int, default=150)
 
     args = parser.parse_args()
     return args

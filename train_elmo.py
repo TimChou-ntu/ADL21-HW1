@@ -68,7 +68,7 @@ def main_elmo(args):
     criterion = torch.nn.CrossEntropyLoss(ignore_index=-1)
     optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
     # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50,100,150], gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[40,80,120], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_acc = 0
@@ -213,7 +213,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cuda"
     )
-    parser.add_argument("--num_epoch", type=int, default=300)
+    parser.add_argument("--num_epoch", type=int, default=150)
 
     args = parser.parse_args()
     return args
